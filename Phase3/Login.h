@@ -1,3 +1,6 @@
+#include "Register.h"
+#include"User.h"
+
 #pragma once
 
 namespace Phase3 {
@@ -8,7 +11,7 @@ namespace Phase3 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-
+	using namespace MySql::Data::MySqlClient;
 	/// <summary>
 	/// Summary for MyForm
 	/// </summary>
@@ -94,6 +97,8 @@ namespace Phase3 {
 			this->createButton->TabIndex = 1;
 			this->createButton->Text = L"Create Account";
 			this->createButton->UseVisualStyleBackColor = true;
+			this->createButton->Click += gcnew System::EventHandler(this, &MyForm::createButton_Click);
+
 			// 
 			// PhotoApp
 			// 
@@ -168,7 +173,59 @@ namespace Phase3 {
 	}
 private: System::Void password_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 }
+	   public:User^ user=nullptr;
 private: System::Void loginButton_Click(System::Object^ sender, System::EventArgs^ e) {
+	String^ email = this->username->Text;
+	String^ password = this->password->Text;
+
+	if (email->Length == 0 || password->Length == 0) {
+		MessageBox::Show("Please enter email and password",
+			"Email or Password Empty", MessageBoxButtons::OK);
+		return;
+	}
+
+	try {
+			String^ constr = "Server =127.0.0.1; Uid=root; Pwd=1234;Database=a2";
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
+
+		String^ sqlQuery = "SELECT * FROM user WHERE email=@email AND password=@password;";
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@email", email);
+		cmd->Parameters->AddWithValue("@password", password);
+		con->Open();
+
+		MySqlDataReader^ reader = cmd->ExecuteReader();
+		if (reader->Read()) {
+			MessageBox::Show("Logged In !");
+
+			this->Close();
+		}
+		else {
+			MessageBox::Show("Email or password is incorrect",
+				"Email or Password Error", MessageBoxButtons::OK);
+		}
+
+		con->Close();
+
+	}
+	catch (Exception^ ex) {
+
+		MessageBox::Show(ex->Message);
+
+	}
+
 }
+
+	   private: System::Void createButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		   // Create a new instance of the Register form
+		   Register^ registerForm = gcnew Register();
+
+		   // Show the Register form
+		   registerForm->Show();
+
+		   // Hide the current form (MyForm)
+		   this->Hide();
+	   }
+
 };
 }

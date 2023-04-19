@@ -1,5 +1,4 @@
-#include "Login.h"
-
+#include "Register.h"
 
 using namespace System;
 
@@ -7,7 +6,7 @@ using namespace System::Windows::Forms;
 
 [STAThread]
 
-void main(array<String^>^ args)
+void registerMain(array<String^>^ args)
 
 {
 
@@ -15,7 +14,7 @@ void main(array<String^>^ args)
 
     Application::SetCompatibleTextRenderingDefault(false);
 
-    Phase3::MyForm form;
+    Phase3::Register form;
 
     Application::Run(% form);
 
