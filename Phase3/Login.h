@@ -1,5 +1,7 @@
 #include "Register.h"
 #include"User.h"
+#include"Profile.h"
+
 
 #pragma once
 
@@ -196,9 +198,15 @@ private: System::Void loginButton_Click(System::Object^ sender, System::EventArg
 
 		MySqlDataReader^ reader = cmd->ExecuteReader();
 		if (reader->Read()) {
-			MessageBox::Show("Logged In !");
+			// Create a new instance of the Register form
+			Profile^ profile = gcnew Profile();
 
-			this->Close();
+			// Show the Register form
+			profile->Show();
+
+			// Hide the current form (MyForm)
+			this->Hide();
+
 		}
 		else {
 			MessageBox::Show("Email or password is incorrect",
