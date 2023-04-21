@@ -10,7 +10,9 @@ namespace Phase3 {
 	using namespace System::Drawing;
 	using namespace MySql::Data::MySqlClient;
 	using namespace System::Windows::Forms;
-
+	using namespace System::IO;
+	using namespace System::Net;
+	using namespace System::Collections::Generic;
 	/// <summary>
 	/// Summary for Photo
 	/// </summary>
@@ -48,6 +50,13 @@ namespace Phase3 {
 	private: System::Windows::Forms::ListView^ listView2;
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::ImageList^ imageList1;
+	private: System::Windows::Forms::Label^ label4;
+	private: System::Windows::Forms::Button^ button4;
+
+
+
+
+
 	private: System::ComponentModel::IContainer^ components;
 	protected:
 
@@ -76,6 +85,8 @@ namespace Phase3 {
 			this->listView2 = (gcnew System::Windows::Forms::ListView());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->imageList1 = (gcnew System::Windows::Forms::ImageList(this->components));
+			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -151,20 +162,21 @@ namespace Phase3 {
 			// listView2
 			// 
 			this->listView2->HideSelection = false;
-			this->listView2->Location = System::Drawing::Point(373, 31);
+			this->listView2->Location = System::Drawing::Point(814, 115);
 			this->listView2->Name = L"listView2";
-			this->listView2->Size = System::Drawing::Size(163, 195);
+			this->listView2->Size = System::Drawing::Size(397, 250);
 			this->listView2->TabIndex = 9;
 			this->listView2->UseCompatibleStateImageBehavior = false;
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(421, 232);
+			this->button3->Location = System::Drawing::Point(952, 83);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 10;
 			this->button3->Text = L"Show";
 			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &Photo::button3_Click_1);
 			// 
 			// imageList1
 			// 
@@ -172,11 +184,32 @@ namespace Phase3 {
 			this->imageList1->ImageSize = System::Drawing::Size(16, 16);
 			this->imageList1->TransparentColor = System::Drawing::Color::Transparent;
 			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->Location = System::Drawing::Point(811, 83);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(115, 13);
+			this->label4->TabIndex = 11;
+			this->label4->Text = L"Show All Of My Photos";
+			// 
+			// button4
+			// 
+			this->button4->Location = System::Drawing::Point(705, 121);
+			this->button4->Name = L"button4";
+			this->button4->Size = System::Drawing::Size(75, 23);
+			this->button4->TabIndex = 12;
+			this->button4->Text = L"Like";
+			this->button4->UseVisualStyleBackColor = true;
+			this->button4->Click += gcnew System::EventHandler(this, &Photo::button4_Click);
+			// 
 			// Photo
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(548, 322);
+			this->ClientSize = System::Drawing::Size(1245, 465);
+			this->Controls->Add(this->button4);
+			this->Controls->Add(this->label4);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->listView2);
 			this->Controls->Add(this->button2);
@@ -285,7 +318,7 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 	}
 		  
 
-private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+private: System::Void button3_Click_1(System::Object^ sender, System::EventArgs^ e) {
 	try {
 		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
 		MySqlConnection^ con = gcnew MySqlConnection(constr);
@@ -304,50 +337,93 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 		imageList1->ImageSize = System::Drawing::Size(64, 64);
 		imageList1->ColorDepth = ColorDepth::Depth32Bit;
 
-		// Get the list of albums for the current user
-		sqlQuery = "SELECT album_id, name FROM album WHERE user_id=@userID;";
+		// Create a list to store the loaded images
+		List<Image^>^ loadedImages = gcnew List<Image^>();
+
+		// Get the list of photos for the current user
+		sqlQuery = "SELECT url FROM photo WHERE user_id=@userID;";
+
 		cmd = gcnew MySqlCommand(sqlQuery, con);
 		cmd->Parameters->AddWithValue("@userID", currentUserID);
 		con->Open();
 		MySqlDataReader^ reader = cmd->ExecuteReader();
 		while (reader->Read()) {
-			int albumID = reader->GetInt32(0);
-			String^ albumName = reader->GetString(1);
+			String^ url = reader->GetString(0);
 
-			// Get the list of photos for the current album
-			sqlQuery = "SELECT caption, url FROM photo WHERE user_id=@userID AND album_id=@albumID;";
-			MySqlCommand^ cmd2 = gcnew MySqlCommand(sqlQuery, con);
-			cmd2->Parameters->AddWithValue("@userID", currentUserID);
-			cmd2->Parameters->AddWithValue("@albumID", albumID);
-			MySqlDataReader^ reader2 = cmd2->ExecuteReader();
-			while (reader2->Read()) {
-				String^ caption = reader2->GetString(0);
-				String^ url = reader2->GetString(1);
+			// Load the image from the URL
+			System::Net::WebClient^ webClient = gcnew System::Net::WebClient();
+			array<Byte>^ imageBytes = webClient->DownloadData(url);
+			System::IO::MemoryStream^ stream = gcnew System::IO::MemoryStream(imageBytes);
+			Image^ image = Image::FromStream(stream);
 
-				// Load the image from the URL
-				System::Net::WebClient^ webClient = gcnew System::Net::WebClient();
-				System::IO::MemoryStream^ stream = gcnew System::IO::MemoryStream(webClient->DownloadData(url));
-				Image^ image = Image::FromStream(stream);
+			// Add the image to the image list and loaded images list
+			imageList1->Images->Add(image);
+			loadedImages->Add(image);
 
-				imageList1->Images->Add(image);
-				listView2->LargeImageList = imageList1;
-				listView2->View = View::LargeIcon;
-
-				// Create a new ListViewItem and add it to listView2
-				ListViewItem^ item = gcnew ListViewItem(gcnew array<String^> { albumName, caption }, -1);
-				item->ImageIndex = imageList1->Images->Count - 1;
-				listView2->Items->Add(item);
-			}
-			reader2->Close();
+			// Create a new ListViewItem and add it to listView2
+			ListViewItem^ item = gcnew ListViewItem(gcnew array<String^> { url }, -1);
+			item->ImageIndex = imageList1->Images->Count - 1;
+			listView2->Items->Add(item);
 		}
 		reader->Close();
 		con->Close();
+
+		// Set the image list for listView2
+		listView2->LargeImageList = imageList1;
 	}
-	catch (Exception^ ex) {
-		MessageBox::Show(ex->Message);
+	catch (MySqlException^ ex) {
+		MessageBox::Show(ex->ToString());
 	}
 }
 
+
+
+
+private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+	try {
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		MySqlConnection^ con = gcnew MySqlConnection(constr);
+		con->Open();
+
+		// Get the ID of the selected photo
+		int photo_ID = -1;
+		if (listView2->SelectedItems->Count > 0) {
+			ListViewItem^ selectedItem = listView2->SelectedItems[0];
+			photo_ID = Convert::ToInt32(selectedItem->Tag);
+		}
+
+		if (photo_ID == -1) {
+			MessageBox::Show("Please select a photo to like.");
+			return;
+		}
+
+		// Get the ID of the current user
+		String^ currentUserEmail = "a"; // replace with actual value
+		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@email", currentUserEmail);
+		int currentUserID = Convert::ToInt32(cmd->ExecuteScalar());
+
+		// Insert a new row into the likes table
+		sqlQuery = "INSERT INTO likes (user_id, photo_id) VALUES (@user_id, @photo_id);";
+		cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@user_id", currentUserID);
+		cmd->Parameters->AddWithValue("@photo_id", photo_ID);
+		cmd->ExecuteNonQuery();
+
+		// Update the number of likes for the selected item in the ListView
+		sqlQuery = "SELECT COUNT(*) FROM likes WHERE photo_id=@photo_ID;";
+		cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@photo_ID", photo_ID);
+		int numLikes = Convert::ToInt32(cmd->ExecuteScalar());
+		listView2->SelectedItems[0]->SubItems[1]->Text = numLikes.ToString();
+
+		con->Close();
+	}
+	catch (MySqlException^ ex) {
+		MessageBox::Show(ex->ToString());
+	}
+}
 
 };
 }
