@@ -176,6 +176,9 @@ namespace Phase3 {
 private: System::Void password_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 	   public:User^ user=nullptr;
+
+			 private: static int userId;
+
 private: System::Void loginButton_Click(System::Object^ sender, System::EventArgs^ e) {
 	String^ email = this->username->Text;
 	String^ password = this->password->Text;
@@ -198,6 +201,8 @@ private: System::Void loginButton_Click(System::Object^ sender, System::EventArg
 
 		MySqlDataReader^ reader = cmd->ExecuteReader();
 		if (reader->Read()) {
+			userId = Convert::ToInt32(reader["user_id"]);
+
 			// Create a new instance of the Register form
 			Profile^ profile = gcnew Profile();
 

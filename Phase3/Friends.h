@@ -9,7 +9,7 @@ namespace Phase3 {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace MySql::Data::MySqlClient;
-
+	using namespace System::Windows::Forms;
 	/// <summary>
 	/// Summary for Friends
 	/// </summary>
@@ -47,6 +47,8 @@ namespace Phase3 {
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::ListView^ listView1;
 	private: System::Windows::Forms::ListView^ listView2;
+	private: System::Windows::Forms::Button^ button3;
+	private: System::Windows::Forms::Button^ button4;
 
 	private: System::ComponentModel::IContainer^ components;
 
@@ -74,6 +76,8 @@ namespace Phase3 {
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
 			this->listView2 = (gcnew System::Windows::Forms::ListView());
+			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->button4 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->bindingSource1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -114,7 +118,7 @@ namespace Phase3 {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(436, 91);
+			this->label2->Location = System::Drawing::Point(438, 65);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(46, 13);
 			this->label2->TabIndex = 5;
@@ -123,7 +127,7 @@ namespace Phase3 {
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(551, 91);
+			this->label3->Location = System::Drawing::Point(554, 65);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(49, 13);
 			this->label3->TabIndex = 6;
@@ -157,11 +161,33 @@ namespace Phase3 {
 			this->listView2->TabIndex = 9;
 			this->listView2->UseCompatibleStateImageBehavior = false;
 			// 
+			// button3
+			// 
+			this->button3->Location = System::Drawing::Point(425, 81);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(75, 23);
+			this->button3->TabIndex = 10;
+			this->button3->Text = L"Show";
+			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &Friends::button3_Click);
+			// 
+			// button4
+			// 
+			this->button4->Location = System::Drawing::Point(545, 81);
+			this->button4->Name = L"button4";
+			this->button4->Size = System::Drawing::Size(75, 23);
+			this->button4->TabIndex = 11;
+			this->button4->Text = L"Show";
+			this->button4->UseVisualStyleBackColor = true;
+			this->button4->Click += gcnew System::EventHandler(this, &Friends::button4_Click);
+			// 
 			// Friends
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(641, 409);
+			this->Controls->Add(this->button4);
+			this->Controls->Add(this->button3);
 			this->Controls->Add(this->listView2);
 			this->Controls->Add(this->listView1);
 			this->Controls->Add(this->button2);
@@ -181,17 +207,17 @@ namespace Phase3 {
 #pragma endregion
 	private: System::Void searchFriend_Click(System::Object^ sender, System::EventArgs^ e) {
 			
-		String^ firstName = textBox1->Text;
+		String^ email = textBox1->Text;
 		String^ constr = "Server =127.0.0.1; Uid=root; Pwd=1234;Database=a2";
 		MySqlConnection^ con = gcnew MySqlConnection(constr);
-		MySqlDataAdapter^ sda = gcnew MySqlDataAdapter("SELECT firstname FROM user WHERE firstname LIKE '" + firstName + "%'", con);
+		MySqlDataAdapter^ sda = gcnew MySqlDataAdapter("SELECT email FROM user WHERE email LIKE '" + email + "%'", con);
 		DataTable^ dt = gcnew DataTable();
 		sda->Fill(dt);
 		listBox1->Items->Clear();
 
 		for each (DataRow ^ row in dt->Rows)
 		{
-			listBox1->Items->Add(row["firstname"]->ToString());
+			listBox1->Items->Add(row["email"]->ToString());
 		}
 
 	}
@@ -199,35 +225,145 @@ namespace Phase3 {
 
 		   int currentUserId;
 
+
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-	// Get the selected first name from listBox1
-	String^ selectedName = listBox1->SelectedItem->ToString();
+	// Get the selected user email from the listbox
+	String^ selectedUserEmail = listBox1->SelectedItem->ToString();
 
-	// Connect to the database
-	String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
-	MySqlConnection^ con = gcnew MySqlConnection(constr);
-	con->Open();
+	// Get the current user's email
+	String^ currentUserEmail = "a"; // replace with actual value
 
-	// Retrieve the user_id of the selected user
-	MySqlCommand^ getUserIdCmd = gcnew MySqlCommand("SELECT user_id FROM user WHERE firstname = @firstName", con);
-	getUserIdCmd->Parameters->Add("@firstName", MySqlDbType::VarChar)->Value = selectedName;
-	int followedId = Convert::ToInt32(getUserIdCmd->ExecuteScalar());
-	// Insert the friend record into the database
-	MySqlCommand^ insertCmd = gcnew MySqlCommand("INSERT INTO friend (follower, followed) VALUES (@followerId, @followedId)", con);
-	insertCmd->Parameters->Add("@followerId", MySqlDbType::Int32)->Value = currentUserId;
-	insertCmd->Parameters->Add("@followedId", MySqlDbType::Int32)->Value = followedId;
-	insertCmd->ExecuteNonQuery();
+	try {
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		MySqlConnection^ con = gcnew MySqlConnection(constr);
 
-	// Close the database connection
-	con->Close();
+		// Get the user_id of the selected user
+		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@email", selectedUserEmail);
+		con->Open();
+		int followedId = Convert::ToInt32(cmd->ExecuteScalar());
+		con->Close();
+
+		// Get the user_id of the current user
+		sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+		cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@email", currentUserEmail);
+		con->Open();
+		int followerId = Convert::ToInt32(cmd->ExecuteScalar());
+		con->Close();
+
+		// Check if the friend relationship already exists
+		sqlQuery = "SELECT COUNT(*) FROM friends WHERE currentUser=@currentUser AND addedUser=@addedUser;";
+		cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@currentUser", followerId);
+		cmd->Parameters->AddWithValue("@addedUser", followedId);
+		con->Open();
+		int count = Convert::ToInt32(cmd->ExecuteScalar());
+		con->Close();
+
+
+		// Insert the friend record
+		if (count == 0) {
+		sqlQuery = "INSERT INTO friends (currentUser, addedUser) VALUES (@currentUser, @addedUser);";
+		cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@currentUser", followerId);
+		cmd->Parameters->AddWithValue("@addedUser", followedId);
+		con->Open();
+		cmd->ExecuteNonQuery();
+		con->Close();
+		MessageBox::Show("Friend added successfully", "Success", MessageBoxButtons::OK);
+		}
+		else {
+			MessageBox::Show("Friend relationship already exists", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		}
+
+		// Retrieve all the friends of the current user
+		sqlQuery = "SELECT u.email FROM friends f INNER JOIN user u ON f.addedUser=u.user_id WHERE f.currentUser=@currentUser;";
+		cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@currentUser", followerId);
+		con->Open();
+		MySqlDataReader^ reader = cmd->ExecuteReader();
+
+		
+
+		reader->Close();
+		con->Close();
+
+
+	}
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message);
+	}
 }
 
 
+private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+	try {
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		MySqlConnection^ con = gcnew MySqlConnection(constr);
 
+		// Get the user_id of the current user
+		String^ currentUserEmail = "a"; // replace with actual value
+		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@email", currentUserEmail);
+		con->Open();
+		int followerId = Convert::ToInt32(cmd->ExecuteScalar());
+		con->Close();
 
+		// Get the list of added users
+		sqlQuery = "SELECT user.email FROM friends INNER JOIN user ON friends.addedUser=user.user_id WHERE friends.currentUser=@followerId;";
+		cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@followerId", followerId);
+		con->Open();
+		MySqlDataReader^ reader = cmd->ExecuteReader();
+		listView1->Items->Clear();
+		while (reader->Read()) {
+			String^ addedUserEmail = reader->GetString(0);
+			ListViewItem^ item = gcnew ListViewItem(addedUserEmail);
+			listView1->Items->Add(item);
+		}
+		reader->Close();
+		con->Close();
+	}
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message);
+	}
 
+}
+private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
 
+	try {
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		MySqlConnection^ con = gcnew MySqlConnection(constr);
 
+		// Get the user_id of the current user
+		String^ currentUserEmail = "a"; // replace with actual value
+		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@email", currentUserEmail);
+		con->Open();
+		int followerId = Convert::ToInt32(cmd->ExecuteScalar());
+		con->Close();
 
+		// Get the list of added users
+		sqlQuery = "SELECT user.email FROM friends INNER JOIN user ON friends.currentUser=user.user_id WHERE friends.addedUser=@followerId;";
+		cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@followerId", followerId);
+		con->Open();
+		MySqlDataReader^ reader = cmd->ExecuteReader();
+		while (reader->Read()) {
+			String^ addedUserEmail = reader->GetString(0);
+			ListViewItem^ item = gcnew ListViewItem(addedUserEmail);
+			listView2->Items->Add(item);
+		}
+		reader->Close();
+		con->Close();
+	}
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message);
+	}
+}
 };
 }
