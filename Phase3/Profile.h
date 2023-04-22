@@ -40,6 +40,8 @@ namespace Phase3 {
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Button^ button3;
+	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::ListView^ listView1;
 	protected:
 
 
@@ -59,11 +61,13 @@ namespace Phase3 {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->listView1 = (gcnew System::Windows::Forms::ListView());
 			this->SuspendLayout();
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(294, 33);
+			this->button1->Location = System::Drawing::Point(306, 33);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(105, 35);
 			this->button1->TabIndex = 0;
@@ -83,25 +87,46 @@ namespace Phase3 {
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(57, 104);
+			this->button3->Location = System::Drawing::Point(176, 33);
 			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(101, 42);
+			this->button3->Size = System::Drawing::Size(101, 35);
 			this->button3->TabIndex = 2;
 			this->button3->Text = L"Photos";
 			this->button3->UseVisualStyleBackColor = true;
 			this->button3->Click += gcnew System::EventHandler(this, &Profile::button3_Click);
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(54, 132);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(35, 13);
+			this->label1->TabIndex = 3;
+			this->label1->Text = L"Top 10 Users";
+			// 
+			// listView1
+			// 
+			this->listView1->HideSelection = false;
+			this->listView1->Location = System::Drawing::Point(37, 162);
+			this->listView1->Name = L"listView1";
+			this->listView1->Size = System::Drawing::Size(121, 97);
+			this->listView1->TabIndex = 4;
+			this->listView1->UseCompatibleStateImageBehavior = false;
 			// 
 			// Profile
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(459, 360);
+			this->Controls->Add(this->listView1);
+			this->Controls->Add(this->label1);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
 			this->Name = L"Profile";
 			this->Text = L"Profile";
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
@@ -136,5 +161,6 @@ namespace Phase3 {
 		// Hide the current form (MyForm)
 		this->Hide();
 	}
+
 };
 }

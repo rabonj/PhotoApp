@@ -52,6 +52,13 @@ namespace Phase3 {
 	private: System::Windows::Forms::ImageList^ imageList1;
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::Button^ button4;
+	private: System::Windows::Forms::Button^ button5;
+	private: System::Windows::Forms::Button^ button6;
+	private: System::Windows::Forms::ListView^ listView3;
+	private: System::Windows::Forms::Label^ label5;
+	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::Button^ button7;
+	private: System::Windows::Forms::Label^ label6;
 
 
 
@@ -87,11 +94,18 @@ namespace Phase3 {
 			this->imageList1 = (gcnew System::Windows::Forms::ImageList(this->components));
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->button4 = (gcnew System::Windows::Forms::Button());
+			this->button5 = (gcnew System::Windows::Forms::Button());
+			this->button6 = (gcnew System::Windows::Forms::Button());
+			this->listView3 = (gcnew System::Windows::Forms::ListView());
+			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->button7 = (gcnew System::Windows::Forms::Button());
+			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(102, 171);
+			this->button1->Location = System::Drawing::Point(76, 171);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(75, 23);
 			this->button1->TabIndex = 0;
@@ -101,14 +115,14 @@ namespace Phase3 {
 			// 
 			// textBox1
 			// 
-			this->textBox1->Location = System::Drawing::Point(102, 31);
+			this->textBox1->Location = System::Drawing::Point(76, 31);
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(100, 20);
 			this->textBox1->TabIndex = 1;
 			// 
 			// textBox2
 			// 
-			this->textBox2->Location = System::Drawing::Point(102, 76);
+			this->textBox2->Location = System::Drawing::Point(76, 76);
 			this->textBox2->Name = L"textBox2";
 			this->textBox2->Size = System::Drawing::Size(100, 20);
 			this->textBox2->TabIndex = 2;
@@ -116,7 +130,7 @@ namespace Phase3 {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(40, 31);
+			this->label1->Location = System::Drawing::Point(14, 31);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(43, 13);
 			this->label1->TabIndex = 3;
@@ -125,7 +139,7 @@ namespace Phase3 {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(40, 79);
+			this->label2->Location = System::Drawing::Point(14, 79);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(29, 13);
 			this->label2->TabIndex = 4;
@@ -134,7 +148,7 @@ namespace Phase3 {
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(43, 116);
+			this->label3->Location = System::Drawing::Point(17, 116);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(36, 13);
 			this->label3->TabIndex = 5;
@@ -143,7 +157,7 @@ namespace Phase3 {
 			// listView1
 			// 
 			this->listView1->HideSelection = false;
-			this->listView1->Location = System::Drawing::Point(102, 115);
+			this->listView1->Location = System::Drawing::Point(76, 115);
 			this->listView1->Name = L"listView1";
 			this->listView1->Size = System::Drawing::Size(121, 29);
 			this->listView1->TabIndex = 7;
@@ -151,7 +165,7 @@ namespace Phase3 {
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(251, 116);
+			this->button2->Location = System::Drawing::Point(225, 116);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(75, 23);
 			this->button2->TabIndex = 8;
@@ -162,15 +176,15 @@ namespace Phase3 {
 			// listView2
 			// 
 			this->listView2->HideSelection = false;
-			this->listView2->Location = System::Drawing::Point(814, 115);
+			this->listView2->Location = System::Drawing::Point(841, 58);
 			this->listView2->Name = L"listView2";
-			this->listView2->Size = System::Drawing::Size(397, 250);
+			this->listView2->Size = System::Drawing::Size(344, 120);
 			this->listView2->TabIndex = 9;
 			this->listView2->UseCompatibleStateImageBehavior = false;
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(952, 83);
+			this->button3->Location = System::Drawing::Point(841, 29);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 10;
@@ -187,7 +201,7 @@ namespace Phase3 {
 			// label4
 			// 
 			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(811, 83);
+			this->label4->Location = System::Drawing::Point(818, 9);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(115, 13);
 			this->label4->TabIndex = 11;
@@ -195,7 +209,7 @@ namespace Phase3 {
 			// 
 			// button4
 			// 
-			this->button4->Location = System::Drawing::Point(705, 121);
+			this->button4->Location = System::Drawing::Point(885, 184);
 			this->button4->Name = L"button4";
 			this->button4->Size = System::Drawing::Size(75, 23);
 			this->button4->TabIndex = 12;
@@ -203,11 +217,82 @@ namespace Phase3 {
 			this->button4->UseVisualStyleBackColor = true;
 			this->button4->Click += gcnew System::EventHandler(this, &Photo::button4_Click);
 			// 
+			// button5
+			// 
+			this->button5->Location = System::Drawing::Point(1040, 184);
+			this->button5->Name = L"button5";
+			this->button5->Size = System::Drawing::Size(75, 23);
+			this->button5->TabIndex = 13;
+			this->button5->Text = L"Delete";
+			this->button5->UseVisualStyleBackColor = true;
+			this->button5->Click += gcnew System::EventHandler(this, &Photo::button5_Click);
+			// 
+			// button6
+			// 
+			this->button6->Location = System::Drawing::Point(357, 31);
+			this->button6->Name = L"button6";
+			this->button6->Size = System::Drawing::Size(75, 23);
+			this->button6->TabIndex = 14;
+			this->button6->Text = L"Show";
+			this->button6->UseVisualStyleBackColor = true;
+			this->button6->Click += gcnew System::EventHandler(this, &Photo::button6_Click);
+			// 
+			// listView3
+			// 
+			this->listView3->HideSelection = false;
+			this->listView3->Location = System::Drawing::Point(348, 58);
+			this->listView3->Name = L"listView3";
+			this->listView3->Size = System::Drawing::Size(344, 136);
+			this->listView3->TabIndex = 15;
+			this->listView3->UseCompatibleStateImageBehavior = false;
+			// 
+			// label5
+			// 
+			this->label5->AutoSize = true;
+			this->label5->Location = System::Drawing::Point(334, 9);
+			this->label5->Name = L"label5";
+			this->label5->Size = System::Drawing::Size(177, 13);
+			this->label5->TabIndex = 16;
+			this->label5->Text = L"Show All of the photos in the sytsem";
+			// 
+			// textBox3
+			// 
+			this->textBox3->Location = System::Drawing::Point(570, 24);
+			this->textBox3->Name = L"textBox3";
+			this->textBox3->Size = System::Drawing::Size(100, 20);
+			this->textBox3->TabIndex = 17;
+			// 
+			// button7
+			// 
+			this->button7->Location = System::Drawing::Point(676, 25);
+			this->button7->Name = L"button7";
+			this->button7->Size = System::Drawing::Size(75, 23);
+			this->button7->TabIndex = 18;
+			this->button7->Text = L"Submit";
+			this->button7->UseVisualStyleBackColor = true;
+			this->button7->Click += gcnew System::EventHandler(this, &Photo::button7_Click);
+			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->Location = System::Drawing::Point(567, 8);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(86, 13);
+			this->label6->TabIndex = 19;
+			this->label6->Text = L"Show by caption";
+			// 
 			// Photo
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1245, 465);
+			this->Controls->Add(this->label6);
+			this->Controls->Add(this->button7);
+			this->Controls->Add(this->textBox3);
+			this->Controls->Add(this->label5);
+			this->Controls->Add(this->listView3);
+			this->Controls->Add(this->button6);
+			this->Controls->Add(this->button5);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->button3);
@@ -319,6 +404,8 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 		  
 
 private: System::Void button3_Click_1(System::Object^ sender, System::EventArgs^ e) {
+	listView2->Clear();
+
 	try {
 		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
 		MySqlConnection^ con = gcnew MySqlConnection(constr);
@@ -386,11 +473,16 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 		con->Open();
 
 		// Get the ID of the selected photo
+		// Get the ID of the selected photo
 		int photo_ID = -1;
 		if (listView2->SelectedItems->Count > 0) {
 			ListViewItem^ selectedItem = listView2->SelectedItems[0];
-			photo_ID = Convert::ToInt32(selectedItem->Tag);
+			if (selectedItem->Tag != nullptr) {
+				photo_ID = Convert::ToInt32(selectedItem->Tag);
+				MessageBox::Show("Selected photo ID: " + photo_ID);
+			}
 		}
+
 
 		if (photo_ID == -1) {
 			MessageBox::Show("Please select a photo to like.");
@@ -424,6 +516,159 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 		MessageBox::Show(ex->ToString());
 	}
 }
+
+	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+		try {
+			String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
+			con->Open();
+
+			// Get the URL of the selected photo
+			String^ photoURL = "";
+			String^ albumID = "";
+			String^ photoCaption = "";
+			if (listView2->SelectedItems->Count > 0) {
+				ListViewItem^ selectedItem = listView2->SelectedItems[0];
+				if (selectedItem->SubItems->Count >= 1) {
+					photoURL = selectedItem->SubItems[0]->Text;
+				}
+			}
+
+			if (photoURL == "") {
+				MessageBox::Show("Please select a photo to delete.");
+				return;
+			}
+
+			// Get the ID of the current user
+			String^ currentUserEmail = "a"; // replace with actual value
+			String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@email", currentUserEmail);
+			int currentUserID = Convert::ToInt32(cmd->ExecuteScalar());
+
+			// Delete the selected photo from the database
+			sqlQuery = "DELETE FROM photo WHERE user_id=@user_id AND url=@url;";
+			cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@user_id", currentUserID);
+			cmd->Parameters->AddWithValue("@url", photoURL);
+			cmd->ExecuteNonQuery();
+
+			// Remove the selected photo from the ListView
+			listView2->SelectedItems[0]->Remove();
+
+			con->Close();
+		}
+		catch (MySqlException^ ex) {
+			MessageBox::Show(ex->ToString());
+		}
+	}
+
+
+
+
+
+private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e) {
+	listView3->Clear();
+
+	try {
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		MySqlConnection^ con = gcnew MySqlConnection(constr);
+
+		// Create a new ImageList object to store the images
+		ImageList^ imageList1 = gcnew ImageList();
+		imageList1->ImageSize = System::Drawing::Size(64, 64);
+		imageList1->ColorDepth = ColorDepth::Depth32Bit;
+
+		// Create a list to store the loaded images
+		List<Image^>^ loadedImages = gcnew List<Image^>();
+
+		// Get the list of all photos
+		String^ sqlQuery = "SELECT url FROM photo;";
+
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		con->Open();
+		MySqlDataReader^ reader = cmd->ExecuteReader();
+		while (reader->Read()) {
+			String^ url = reader->GetString(0);
+
+			// Load the image from the URL
+			System::Net::WebClient^ webClient = gcnew System::Net::WebClient();
+			array<Byte>^ imageBytes = webClient->DownloadData(url);
+			System::IO::MemoryStream^ stream = gcnew System::IO::MemoryStream(imageBytes);
+			Image^ image = Image::FromStream(stream);
+
+			// Add the image to the image list and loaded images list
+			imageList1->Images->Add(image);
+			loadedImages->Add(image);
+
+			// Create a new ListViewItem and add it to listView2
+			ListViewItem^ item = gcnew ListViewItem(gcnew array<String^> { url }, -1);
+			item->ImageIndex = imageList1->Images->Count - 1;
+			listView3->Items->Add(item);
+		}
+		reader->Close();
+		con->Close();
+
+		// Set the image list for listView2
+		listView3->LargeImageList = imageList1;
+	}
+	catch (MySqlException^ ex) {
+		MessageBox::Show(ex->ToString());
+	}
+}
+
+
+private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e) {
+	listView3->Clear();
+	try {
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		MySqlConnection^ con = gcnew MySqlConnection(constr);
+
+		// Create a new ImageList object to store the images
+		ImageList^ imageList1 = gcnew ImageList();
+		imageList1->ImageSize = System::Drawing::Size(64, 64);
+		imageList1->ColorDepth = ColorDepth::Depth32Bit;
+
+		// Create a list to store the loaded images
+		List<Image^>^ loadedImages = gcnew List<Image^>();
+
+		// Get the list of photos with the same caption
+		String^ sqlQuery = "SELECT url, caption FROM photo WHERE caption LIKE @caption;";
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@caption", "%" + textBox3->Text + "%");
+		con->Open();
+		MySqlDataReader^ reader = cmd->ExecuteReader();
+		while (reader->Read()) {
+			String^ url = reader->GetString(0);
+			String^ caption = reader->GetString(1);
+
+			// Load the image from the URL
+			System::Net::WebClient^ webClient = gcnew System::Net::WebClient();
+			array<Byte>^ imageBytes = webClient->DownloadData(url);
+			System::IO::MemoryStream^ stream = gcnew System::IO::MemoryStream(imageBytes);
+			Image^ image = Image::FromStream(stream);
+
+			// Add the image to the image list and loaded images list
+			imageList1->Images->Add(image);
+			loadedImages->Add(image);
+
+			// Create a new ListViewItem and add it to listView3
+			ListViewItem^ item = gcnew ListViewItem(gcnew array<String^> { url, caption }, -1);
+			item->ImageIndex = imageList1->Images->Count - 1;
+			listView3->Items->Add(item);
+		}
+		reader->Close();
+		con->Close();
+
+		// Set the image list for listView3
+		listView3->LargeImageList = imageList1;
+	}
+	catch (MySqlException^ ex) {
+		MessageBox::Show(ex->ToString());
+	}
+}
+
+
 
 };
 }
