@@ -118,7 +118,7 @@ namespace Phase3 {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(438, 65);
+			this->label2->Location = System::Drawing::Point(560, 65);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(46, 13);
 			this->label2->TabIndex = 5;
@@ -127,7 +127,7 @@ namespace Phase3 {
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(554, 65);
+			this->label3->Location = System::Drawing::Point(437, 65);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(49, 13);
 			this->label3->TabIndex = 6;
@@ -344,18 +344,18 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
 		cmd->Parameters->AddWithValue("@email", currentUserEmail);
 		con->Open();
-		int followerId = Convert::ToInt32(cmd->ExecuteScalar());
+		int currentUserID = Convert::ToInt32(cmd->ExecuteScalar());
 		con->Close();
 
-		// Get the list of added users
-		sqlQuery = "SELECT user.email FROM friends INNER JOIN user ON friends.currentUser=user.user_id WHERE friends.addedUser=@followerId;";
+		// Get the list of followers
+		sqlQuery = "SELECT DISTINCT user.email FROM friends INNER JOIN user ON friends.currentUser=user.user_id WHERE friends.addedUser=@currentUserID;";
 		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@followerId", followerId);
+		cmd->Parameters->AddWithValue("@currentUserID", currentUserID);
 		con->Open();
 		MySqlDataReader^ reader = cmd->ExecuteReader();
 		while (reader->Read()) {
-			String^ addedUserEmail = reader->GetString(0);
-			ListViewItem^ item = gcnew ListViewItem(addedUserEmail);
+			String^ followerEmail = reader->GetString(0);
+			ListViewItem^ item = gcnew ListViewItem(followerEmail);
 			listView2->Items->Add(item);
 		}
 		reader->Close();
@@ -365,5 +365,9 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 		MessageBox::Show(ex->Message);
 	}
 }
+
+
+
+
 };
 }

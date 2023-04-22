@@ -1,3 +1,4 @@
+
 #pragma once
 
 namespace Phase3 {
@@ -13,6 +14,7 @@ namespace Phase3 {
 	using namespace System::IO;
 	using namespace System::Net;
 	using namespace System::Collections::Generic;
+
 	/// <summary>
 	/// Summary for Photo
 	/// </summary>
@@ -59,6 +61,10 @@ namespace Phase3 {
 	private: System::Windows::Forms::TextBox^ textBox3;
 	private: System::Windows::Forms::Button^ button7;
 	private: System::Windows::Forms::Label^ label6;
+	private: System::Windows::Forms::Label^ label7;
+	private: System::Windows::Forms::ListView^ listView4;
+	private: System::Windows::Forms::TextBox^ textBox4;
+	private: System::Windows::Forms::Button^ button8;
 
 
 
@@ -101,6 +107,10 @@ namespace Phase3 {
 			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
 			this->button7 = (gcnew System::Windows::Forms::Button());
 			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->listView4 = (gcnew System::Windows::Forms::ListView());
+			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
+			this->button8 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -176,7 +186,7 @@ namespace Phase3 {
 			// listView2
 			// 
 			this->listView2->HideSelection = false;
-			this->listView2->Location = System::Drawing::Point(841, 58);
+			this->listView2->Location = System::Drawing::Point(1068, 58);
 			this->listView2->Name = L"listView2";
 			this->listView2->Size = System::Drawing::Size(344, 120);
 			this->listView2->TabIndex = 9;
@@ -184,7 +194,7 @@ namespace Phase3 {
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(841, 29);
+			this->button3->Location = System::Drawing::Point(1068, 29);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 10;
@@ -201,7 +211,7 @@ namespace Phase3 {
 			// label4
 			// 
 			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(818, 9);
+			this->label4->Location = System::Drawing::Point(1045, 9);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(115, 13);
 			this->label4->TabIndex = 11;
@@ -209,7 +219,7 @@ namespace Phase3 {
 			// 
 			// button4
 			// 
-			this->button4->Location = System::Drawing::Point(885, 184);
+			this->button4->Location = System::Drawing::Point(488, 212);
 			this->button4->Name = L"button4";
 			this->button4->Size = System::Drawing::Size(75, 23);
 			this->button4->TabIndex = 12;
@@ -219,7 +229,7 @@ namespace Phase3 {
 			// 
 			// button5
 			// 
-			this->button5->Location = System::Drawing::Point(1040, 184);
+			this->button5->Location = System::Drawing::Point(1267, 184);
 			this->button5->Name = L"button5";
 			this->button5->Size = System::Drawing::Size(75, 23);
 			this->button5->TabIndex = 13;
@@ -229,7 +239,7 @@ namespace Phase3 {
 			// 
 			// button6
 			// 
-			this->button6->Location = System::Drawing::Point(357, 31);
+			this->button6->Location = System::Drawing::Point(453, 42);
 			this->button6->Name = L"button6";
 			this->button6->Size = System::Drawing::Size(75, 23);
 			this->button6->TabIndex = 14;
@@ -240,7 +250,7 @@ namespace Phase3 {
 			// listView3
 			// 
 			this->listView3->HideSelection = false;
-			this->listView3->Location = System::Drawing::Point(348, 58);
+			this->listView3->Location = System::Drawing::Point(464, 70);
 			this->listView3->Name = L"listView3";
 			this->listView3->Size = System::Drawing::Size(344, 136);
 			this->listView3->TabIndex = 15;
@@ -249,7 +259,7 @@ namespace Phase3 {
 			// label5
 			// 
 			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(334, 9);
+			this->label5->Location = System::Drawing::Point(430, 20);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(177, 13);
 			this->label5->TabIndex = 16;
@@ -257,14 +267,14 @@ namespace Phase3 {
 			// 
 			// textBox3
 			// 
-			this->textBox3->Location = System::Drawing::Point(570, 24);
+			this->textBox3->Location = System::Drawing::Point(686, 36);
 			this->textBox3->Name = L"textBox3";
 			this->textBox3->Size = System::Drawing::Size(100, 20);
 			this->textBox3->TabIndex = 17;
 			// 
 			// button7
 			// 
-			this->button7->Location = System::Drawing::Point(676, 25);
+			this->button7->Location = System::Drawing::Point(792, 33);
 			this->button7->Name = L"button7";
 			this->button7->Size = System::Drawing::Size(75, 23);
 			this->button7->TabIndex = 18;
@@ -275,17 +285,56 @@ namespace Phase3 {
 			// label6
 			// 
 			this->label6->AutoSize = true;
-			this->label6->Location = System::Drawing::Point(567, 8);
+			this->label6->Location = System::Drawing::Point(683, 20);
 			this->label6->Name = L"label6";
 			this->label6->Size = System::Drawing::Size(86, 13);
 			this->label6->TabIndex = 19;
 			this->label6->Text = L"Show by caption";
 			// 
+			// label7
+			// 
+			this->label7->AutoSize = true;
+			this->label7->Location = System::Drawing::Point(596, 285);
+			this->label7->Name = L"label7";
+			this->label7->Size = System::Drawing::Size(56, 13);
+			this->label7->TabIndex = 20;
+			this->label7->Text = L"Comments";
+			// 
+			// listView4
+			// 
+			this->listView4->HideSelection = false;
+			this->listView4->Location = System::Drawing::Point(464, 301);
+			this->listView4->Name = L"listView4";
+			this->listView4->Size = System::Drawing::Size(344, 145);
+			this->listView4->TabIndex = 21;
+			this->listView4->UseCompatibleStateImageBehavior = false;
+			// 
+			// textBox4
+			// 
+			this->textBox4->Location = System::Drawing::Point(473, 463);
+			this->textBox4->Name = L"textBox4";
+			this->textBox4->Size = System::Drawing::Size(188, 20);
+			this->textBox4->TabIndex = 22;
+			// 
+			// button8
+			// 
+			this->button8->Location = System::Drawing::Point(686, 463);
+			this->button8->Name = L"button8";
+			this->button8->Size = System::Drawing::Size(75, 23);
+			this->button8->TabIndex = 23;
+			this->button8->Text = L"Add";
+			this->button8->UseVisualStyleBackColor = true;
+			this->button8->Click += gcnew System::EventHandler(this, &Photo::button8_Click);
+			// 
 			// Photo
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1245, 465);
+			this->ClientSize = System::Drawing::Size(1453, 592);
+			this->Controls->Add(this->button8);
+			this->Controls->Add(this->textBox4);
+			this->Controls->Add(this->listView4);
+			this->Controls->Add(this->label7);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->button7);
 			this->Controls->Add(this->textBox3);
@@ -667,6 +716,106 @@ private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e
 		MessageBox::Show(ex->ToString());
 	}
 }
+
+
+
+
+
+private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e) {
+	try {
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		MySqlConnection^ con = gcnew MySqlConnection(constr);
+
+		// Get the user_id of the current user
+		String^ currentUserEmail = "a"; // replace with actual value
+		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@email", currentUserEmail);
+
+		con->Open();
+		Object^ result = cmd->ExecuteScalar();
+		int currentUserID = -1;
+		if (result != nullptr) {
+			currentUserID = Convert::ToInt32(result);
+		}
+		con->Close();
+
+		// Get the photo_id and album_id of the selected photo
+		int photo_id = -1;
+		if (listView2->SelectedItems->Count > 0) {
+			String^ url = listView2->SelectedItems[0]->SubItems[0]->Text;
+			MessageBox::Show(url); // add this line to display the url value
+			String^ sqlQuery = "SELECT photo_id FROM photo WHERE url=@url;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@url", url);
+			con->Open();
+			Object^ result = cmd->ExecuteScalar();
+			if (result != nullptr) {
+				photo_id = Convert::ToInt32(result);
+				MessageBox::Show(Convert::ToString(photo_id)); // add this line to display the photoId value
+			}
+			con->Close();
+		}
+
+		// Insert the comment into the database
+		if (photo_id != -1) {
+			String^ commentText = textBox4->Text;
+			DateTime now = DateTime::Now;
+			String^ sqlQuery = "INSERT INTO comment (user_id, date, text, photo_id) VALUES (@user_id, @date, @text, @photo_id);";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@user_id", currentUserID);
+			cmd->Parameters->AddWithValue("@date", now);
+			cmd->Parameters->AddWithValue("@text", commentText);
+			cmd->Parameters->AddWithValue("@photo_id", photo_id);
+			con->Open();
+			cmd->ExecuteNonQuery();
+			con->Close();
+			MessageBox::Show("Comment Added");
+		}
+
+	}
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message);
+	}
+}
+private: System::Void listView3_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+	if (listView3->SelectedItems->Count > 0) {
+		// Get the selected image ID
+		int imageId = Convert::ToInt32(listView3->SelectedItems[0]->SubItems[0]->Text);
+
+		// Connect to the database
+		MySqlConnection^ connection = gcnew MySqlConnection("Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2");
+		connection->Open();
+
+		try {
+			// Query comments for the selected image
+			MySqlCommand^ command = gcnew MySqlCommand("SELECT comment.text, comment.date FROM comment INNER JOIN photo ON comment.photo_id=photo.photo_id WHERE photo.photo_id=" + imageId, connection);
+			MySqlDataReader^ reader = command->ExecuteReader();
+
+			// Clear ListView4
+			listView4->Items->Clear();
+
+			// Add comments to ListView4
+			while (reader->Read()) {
+				String^ comment = reader->GetString(0);
+				String^ date = reader->GetString(1);
+				listView4->Items->Add(gcnew ListViewItem(gcnew array<String^>{ comment, date }));
+			}
+
+			// Close the reader
+			reader->Close();
+		}
+		catch (Exception^ ex) {
+			// Handle any exceptions thrown during execution
+			MessageBox::Show(ex->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		}
+
+		// Close the database connection
+		connection->Close();
+	}
+}
+
+
 
 
 
