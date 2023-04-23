@@ -1,5 +1,5 @@
 #include "Login.h"
-
+#include "Register.h"
 
 using namespace System;
 

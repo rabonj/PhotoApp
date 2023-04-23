@@ -42,6 +42,7 @@ namespace Phase3 {
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::ListView^ listView1;
+	private: System::Windows::Forms::Button^ button4;
 	protected:
 
 
@@ -63,6 +64,7 @@ namespace Phase3 {
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
+			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -100,24 +102,35 @@ namespace Phase3 {
 			this->label1->AutoSize = true;
 			this->label1->Location = System::Drawing::Point(54, 132);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(35, 13);
+			this->label1->Size = System::Drawing::Size(71, 13);
 			this->label1->TabIndex = 3;
 			this->label1->Text = L"Top 10 Users";
 			// 
 			// listView1
 			// 
 			this->listView1->HideSelection = false;
-			this->listView1->Location = System::Drawing::Point(37, 162);
+			this->listView1->Location = System::Drawing::Point(37, 160);
 			this->listView1->Name = L"listView1";
-			this->listView1->Size = System::Drawing::Size(121, 97);
+			this->listView1->Size = System::Drawing::Size(164, 289);
 			this->listView1->TabIndex = 4;
 			this->listView1->UseCompatibleStateImageBehavior = false;
+			// 
+			// button4
+			// 
+			this->button4->Location = System::Drawing::Point(37, 455);
+			this->button4->Name = L"button4";
+			this->button4->Size = System::Drawing::Size(75, 23);
+			this->button4->TabIndex = 5;
+			this->button4->Text = L"button4";
+			this->button4->UseVisualStyleBackColor = true;
+			this->button4->Click += gcnew System::EventHandler(this, &Profile::button4_Click);
 			// 
 			// Profile
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(459, 360);
+			this->ClientSize = System::Drawing::Size(574, 533);
+			this->Controls->Add(this->button4);
 			this->Controls->Add(this->listView1);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->button3);
@@ -161,6 +174,52 @@ namespace Phase3 {
 		// Hide the current form (MyForm)
 		this->Hide();
 	}
+
+	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+		listView1->Clear();
+		listView1->Columns->Clear();
+		listView1->Columns->Add("Email");
+		listView1->Columns->Add("Contribution Score");
+
+		try {
+			String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
+			con->Open();
+			String^ sqlQuery = "SELECT u.email, SUM(num_photos) + SUM(num_comments) AS contribution_score "
+				"FROM ( "
+				"SELECT user_id, COUNT(*) AS num_photos, 0 AS num_comments "
+				"FROM photo "
+				"GROUP BY user_id "
+				"UNION ALL "
+				"SELECT user_id, 0 AS num_photos, COUNT(*) AS num_comments "
+				"FROM comment "
+				"GROUP BY user_id "
+				") AS t "
+				"INNER JOIN user u ON u.user_id = t.user_id "
+				"GROUP BY t.user_id "
+				"ORDER BY contribution_score DESC "
+				"LIMIT 10;";
+
+
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			MySqlDataReader^ reader = cmd->ExecuteReader();
+
+			while (reader->Read()) {
+				String^ email = reader->GetString(0);
+				String^ contributionScore = reader->GetInt32(1).ToString();
+
+				ListViewItem^ item = gcnew ListViewItem(gcnew array<String^> { email, contributionScore });
+				listView1->Items->Add(item);
+			}
+
+			reader->Close();
+			con->Close();
+		}
+		catch (MySqlException^ ex) {
+			MessageBox::Show(ex->ToString());
+		}
+	}
+
 
 };
 }

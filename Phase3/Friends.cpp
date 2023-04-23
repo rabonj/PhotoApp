@@ -1,6 +1,9 @@
 #include "Friends.h"
 
 
+
+
+
 using namespace System;
 
 using namespace System::Windows::Forms;
@@ -18,5 +21,5 @@ void Friends(array<String^>^ args)
     Phase3::Friends form;
 
     Application::Run(% form);
-
 }
+

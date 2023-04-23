@@ -1,5 +1,6 @@
 #pragma once
 
+
 namespace Phase3 {
 
 	using namespace System;
@@ -10,6 +11,8 @@ namespace Phase3 {
 	using namespace System::Drawing;
 	using namespace MySql::Data::MySqlClient;
 	using namespace System::Windows::Forms;
+	using namespace System::Collections::Generic;
+
 	/// <summary>
 	/// Summary for Friends
 	/// </summary>
@@ -38,7 +41,6 @@ namespace Phase3 {
 	private: System::Windows::Forms::TextBox^ textBox1;
 	protected:
 	private: System::Windows::Forms::Button^ button1;
-
 	private: System::Windows::Forms::BindingSource^ bindingSource1;
 	private: System::Windows::Forms::ListBox^ listBox1;
 	private: System::Windows::Forms::Label^ label1;
@@ -49,6 +51,10 @@ namespace Phase3 {
 	private: System::Windows::Forms::ListView^ listView2;
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::Button^ button4;
+
+
+	private: System::Windows::Forms::Label^ label4;
+
 
 	private: System::ComponentModel::IContainer^ components;
 
@@ -78,6 +84,7 @@ namespace Phase3 {
 			this->listView2 = (gcnew System::Windows::Forms::ListView());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->button4 = (gcnew System::Windows::Forms::Button());
+			this->label4 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->bindingSource1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -181,11 +188,21 @@ namespace Phase3 {
 			this->button4->UseVisualStyleBackColor = true;
 			this->button4->Click += gcnew System::EventHandler(this, &Friends::button4_Click);
 			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->Location = System::Drawing::Point(32, 242);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(117, 13);
+			this->label4->TabIndex = 14;
+			this->label4->Text = L"\tFriend recommendation";
+			// 
 			// Friends
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(641, 409);
+			this->Controls->Add(this->label4);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->listView2);
@@ -365,7 +382,7 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 		MessageBox::Show(ex->Message);
 	}
 }
-
+	
 
 
 

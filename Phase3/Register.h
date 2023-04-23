@@ -1,5 +1,4 @@
 
-
 #pragma once
 
 namespace Phase3 {
@@ -52,6 +51,8 @@ namespace Phase3 {
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::TextBox^ textBox6;
 	private: System::Windows::Forms::Label^ label6;
+	private: System::Windows::Forms::Button^ button2;
+
 
 	protected:
 
@@ -81,6 +82,7 @@ namespace Phase3 {
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
 			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -189,11 +191,21 @@ namespace Phase3 {
 			this->label6->TabIndex = 12;
 			this->label6->Text = L"Home Town";
 			// 
+			// button2
+			// 
+			this->button2->Location = System::Drawing::Point(663, 176);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(75, 24);
+			this->button2->TabIndex = 13;
+			this->button2->Text = L"button2";
+			this->button2->UseVisualStyleBackColor = true;
+			// 
 			// Register
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(826, 341);
+			this->Controls->Add(this->button2);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->textBox6);
 			this->Controls->Add(this->label5);
@@ -241,6 +253,7 @@ namespace Phase3 {
 
 		}
 	}
+
 
 
 };
