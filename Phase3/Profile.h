@@ -1,6 +1,7 @@
 #include"Friends.h"
 #include"Album.h"
 #include"Photo.h"
+
 #pragma once
 
 namespace Phase3 {
@@ -43,6 +44,7 @@ namespace Phase3 {
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::ListView^ listView1;
 	private: System::Windows::Forms::Button^ button4;
+	private: System::Windows::Forms::Button^ button5;
 	protected:
 
 
@@ -65,6 +67,7 @@ namespace Phase3 {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
 			this->button4 = (gcnew System::Windows::Forms::Button());
+			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -125,11 +128,21 @@ namespace Phase3 {
 			this->button4->UseVisualStyleBackColor = true;
 			this->button4->Click += gcnew System::EventHandler(this, &Profile::button4_Click);
 			// 
+			// button5
+			// 
+			this->button5->Location = System::Drawing::Point(473, 455);
+			this->button5->Name = L"button5";
+			this->button5->Size = System::Drawing::Size(75, 23);
+			this->button5->TabIndex = 6;
+			this->button5->Text = L"button5";
+			this->button5->UseVisualStyleBackColor = true;
+			// 
 			// Profile
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(574, 533);
+			this->Controls->Add(this->button5);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->listView1);
 			this->Controls->Add(this->label1);
@@ -186,19 +199,19 @@ namespace Phase3 {
 			MySqlConnection^ con = gcnew MySqlConnection(constr);
 			con->Open();
 			String^ sqlQuery = "SELECT u.email, SUM(num_photos) + SUM(num_comments) AS contribution_score "
-				"FROM ( "
-				"SELECT user_id, COUNT(*) AS num_photos, 0 AS num_comments "
-				"FROM photo "
-				"GROUP BY user_id "
-				"UNION ALL "
-				"SELECT user_id, 0 AS num_photos, COUNT(*) AS num_comments "
-				"FROM comment "
-				"GROUP BY user_id "
-				") AS t "
-				"INNER JOIN user u ON u.user_id = t.user_id "
-				"GROUP BY t.user_id "
-				"ORDER BY contribution_score DESC "
-				"LIMIT 10;";
+	"FROM ( "
+	"SELECT user_id, COUNT(*) AS num_photos, 0 AS num_comments "
+	"FROM photo "
+	"GROUP BY user_id "
+	"UNION ALL "
+	"SELECT user_id, 0 AS num_photos, COUNT(*) AS num_comments "
+	"FROM comment "
+	"GROUP BY user_id "
+	") AS t "
+	"INNER JOIN user u ON u.user_id = t.user_id "
+	"GROUP BY t.user_id "
+	"ORDER BY contribution_score DESC "
+	"LIMIT 10;";
 
 
 			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
@@ -219,6 +232,8 @@ namespace Phase3 {
 			MessageBox::Show(ex->ToString());
 		}
 	}
+
+
 
 
 };

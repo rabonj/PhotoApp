@@ -66,6 +66,8 @@ namespace Phase3 {
 	private: System::Windows::Forms::TextBox^ textBox4;
 	private: System::Windows::Forms::Button^ button8;
 	private: System::Windows::Forms::Button^ button9;
+
+	private: System::Windows::Forms::ListView^ listView5;
 	private: System::Windows::Forms::Button^ button10;
 
 
@@ -114,6 +116,7 @@ namespace Phase3 {
 			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
 			this->button8 = (gcnew System::Windows::Forms::Button());
 			this->button9 = (gcnew System::Windows::Forms::Button());
+			this->listView5 = (gcnew System::Windows::Forms::ListView());
 			this->button10 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
@@ -332,21 +335,30 @@ namespace Phase3 {
 			// 
 			// button9
 			// 
-			this->button9->Location = System::Drawing::Point(829, 319);
+			this->button9->Location = System::Drawing::Point(826, 313);
 			this->button9->Name = L"button9";
 			this->button9->Size = System::Drawing::Size(75, 23);
 			this->button9->TabIndex = 24;
-			this->button9->Text = L"button9";
+			this->button9->Text = L"Show ";
 			this->button9->UseVisualStyleBackColor = true;
 			this->button9->Click += gcnew System::EventHandler(this, &Photo::button9_Click);
 			// 
+			// listView5
+			// 
+			this->listView5->HideSelection = false;
+			this->listView5->Location = System::Drawing::Point(814, 79);
+			this->listView5->Name = L"listView5";
+			this->listView5->Size = System::Drawing::Size(42, 34);
+			this->listView5->TabIndex = 26;
+			this->listView5->UseCompatibleStateImageBehavior = false;
+			// 
 			// button10
 			// 
-			this->button10->Location = System::Drawing::Point(47, 460);
+			this->button10->Location = System::Drawing::Point(814, 136);
 			this->button10->Name = L"button10";
-			this->button10->Size = System::Drawing::Size(75, 23);
-			this->button10->TabIndex = 25;
-			this->button10->Text = L"button10";
+			this->button10->Size = System::Drawing::Size(123, 22);
+			this->button10->TabIndex = 27;
+			this->button10->Text = L"Check Likes";
 			this->button10->UseVisualStyleBackColor = true;
 			this->button10->Click += gcnew System::EventHandler(this, &Photo::button10_Click);
 			// 
@@ -356,6 +368,7 @@ namespace Phase3 {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1453, 592);
 			this->Controls->Add(this->button10);
+			this->Controls->Add(this->listView5);
 			this->Controls->Add(this->button9);
 			this->Controls->Add(this->button8);
 			this->Controls->Add(this->textBox4);
@@ -393,7 +406,7 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 		MySqlConnection^ con = gcnew MySqlConnection(constr);
 
 		// Get the user_id of the current user
-		String^ currentUserEmail = "a"; // replace with actual value
+		String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
 		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
 		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
 		cmd->Parameters->AddWithValue("@email", currentUserEmail);
@@ -448,7 +461,7 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 			MySqlConnection^ con = gcnew MySqlConnection(constr);
 
 			// Get the user_id of the current user
-			String^ currentUserEmail = "a"; // replace with actual value
+			String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
 			String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
 			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
 			cmd->Parameters->AddWithValue("@email", currentUserEmail);
@@ -486,7 +499,7 @@ private: System::Void button3_Click_1(System::Object^ sender, System::EventArgs^
 		MySqlConnection^ con = gcnew MySqlConnection(constr);
 
 		// Get the user_id of the current user
-		String^ currentUserEmail = "a"; // replace with actual value
+		String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
 		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
 		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
 		cmd->Parameters->AddWithValue("@email", currentUserEmail);
@@ -564,7 +577,7 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 		}
 
 		// Get the ID of the current user
-		String^ currentUserEmail = "a"; // replace with actual value
+		String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
 		String^ sqlquery = "SELECT user_id FROM user WHERE email=@email;";
 		MySqlCommand^ gmt = gcnew MySqlCommand(sqlquery, con);
 		gmt->Parameters->AddWithValue("@email", currentUserEmail);
@@ -626,7 +639,7 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 			}
 
 			// Get the ID of the current user
-			String^ currentUserEmail = "a"; // replace with actual value
+			String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
 			String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
 			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
 			cmd->Parameters->AddWithValue("@email", currentUserEmail);
@@ -802,7 +815,7 @@ private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e
 		}
 
 		// Get the ID of the current user
-		String^ currentUserEmail = "a"; // replace with actual value
+		String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
 		String^ sqlquery = "SELECT user_id FROM user WHERE email=@email;";
 		MySqlCommand^ gmt = gcnew MySqlCommand(sqlquery, con);
 		gmt->Parameters->AddWithValue("@email", currentUserEmail);
@@ -835,79 +848,109 @@ private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e
 
 
 private: System::Void button9_Click(System::Object^ sender, System::EventArgs^ e) {
-	   try {
-		   String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
-		   MySqlConnection^ con = gcnew MySqlConnection(constr);
+	listView4->Clear();
+	try {
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		MySqlConnection^ con = gcnew MySqlConnection(constr);
 
-		   // Get the photo_id of the selected photo
-		   int photoId = -1;
-		   if (listView3->SelectedItems->Count > 0) {
-			   String^ photoUrl = listView3->SelectedItems[0]->SubItems[1]->Text;
-			   String^ sqlQuery = "SELECT photo_id FROM photo WHERE url=@photoUrl;";
-			   MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			   cmd->Parameters->AddWithValue("@photoUrl", photoUrl);
-			   con->Open();
-			   Object^ result = cmd->ExecuteScalar();
-			   if (result != nullptr) {
-				   photoId = Convert::ToInt32(result);
-			   }
-			   con->Close();
-		   }
+		// Get the photo_id of the selected photo
+		int photoId = -1;
+		String^ photoUrl = listView3->SelectedItems[0]->SubItems[1]->Text;
 
-		   // Retrieve the comments for the selected photo
-		   if (photoId != -1) {
-			   String^ sqlQuery = "SELECT user.email, comment.text FROM comment INNER JOIN user ON comment.user_id=user.user_id WHERE photo_id=@photoId;";
-			   MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			   cmd->Parameters->AddWithValue("@photoId", photoId);
-			   con->Open();
-			   MySqlDataReader^ reader = cmd->ExecuteReader();
-			   while (reader->Read()) {
-				   String^ userEmail = reader->GetString(0);
-				   String^ commentText = reader->GetString(1);
-				   // add the comment to the ListView
-				   listView4->Items->Add(gcnew ListViewItem(gcnew array<String^>{userEmail, commentText}));
-			   }
+		if (listView3->SelectedItems->Count > 0) {
+			String^ photoUrl = listView3->SelectedItems[0]->SubItems[1]->Text;
+			String^ sqlQuery = "SELECT photo_id FROM photo WHERE url=@photoUrl;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@photoUrl", photoUrl);
+			con->Open();
+			Object^ result = cmd->ExecuteScalar();
+			if (result != nullptr) {
+				photoId = Convert::ToInt32(result);
+			}
+			con->Close();
+		}
+		String^ sqlQuery = "SELECT c.text "
+			+ "FROM comment c "
+			+ "JOIN photo p ON c.photo_id = p.photo_id "
+			+ "WHERE c.photo_id=@photoUrl;";
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@photoUrl", photoUrl);
+		con->Open();
+		MySqlDataReader^ reader = cmd->ExecuteReader();
 
-			   reader->Close();
-			   con->Close();
-			   Console::WriteLine("Retrieved comments for photo id {0}", photoId);
-		   }
+		while (reader->Read()) {
+			String^ commentText = reader->GetString(0);
 
-		   // Retrieve the likes for the selected photo
-		   if (photoId != -1) {
-			   String^ sqlQuery = "SELECT COUNT(*) FROM photo_like WHERE photo_id=@photoId;";
-			   MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			   cmd->Parameters->AddWithValue("@photoId", photoId);
-			   con->Open();
-			   int numLikes = Convert::ToInt32(cmd->ExecuteScalar());
-			   con->Close();
-			   label3->Text = "Likes: " + numLikes.ToString();
+			listView4->Items->Add(gcnew ListViewItem(gcnew array<String^>{ commentText }));
+		}
 
-			   // Retrieve the users who liked the photo
-			   sqlQuery = "SELECT user.email FROM photo_like INNER JOIN user ON photo_like.user_id=user.user_id WHERE photo_id=@photoId;";
-			   cmd = gcnew MySqlCommand(sqlQuery, con);
-			   cmd->Parameters->AddWithValue("@photoId", photoId);
-			   con->Open();
-			   MySqlDataReader^ reader = cmd->ExecuteReader();
-			   while (reader->Read()) {
-				   String^ userEmail = reader->GetString(0);
-				   // add the user to the ListView
-				   listView4->Items->Add(gcnew ListViewItem(userEmail));
-			   }
-			   reader->Close();
-			   con->Close();
-			   Console::WriteLine("Retrieved likes for photo id {0}", photoId);
-		   }
+		reader->Close();
 
-	   }
-	   catch (Exception^ ex) {
-		   MessageBox::Show(ex->Message);
-	   }
+		con->Close();
+
+	}
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message);
+	}
 }
 
 
 
+
+
+
+
+
+
+
 private: System::Void button10_Click(System::Object^ sender, System::EventArgs^ e) {
+	listView5->Clear();
+
+	try {
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		MySqlConnection^ con = gcnew MySqlConnection(constr);
+
+		// Get the photo_id of the selected photo
+		int photoId = -1;
+		String^ photoUrl = listView3->SelectedItems[0]->SubItems[1]->Text;
+
+		if (listView3->SelectedItems->Count > 0) {
+			String^ photoUrl = listView3->SelectedItems[0]->SubItems[1]->Text;
+			String^ sqlQuery = "SELECT photo_id FROM photo WHERE url=@photoUrl;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@photoUrl", photoUrl);
+			con->Open();
+			Object^ result = cmd->ExecuteScalar();
+			if (result != nullptr) {
+				photoId = Convert::ToInt32(result);
+			}
+			con->Close();
+		}
+		String^ sqlQuery = "SELECT COUNT(*) FROM likes WHERE photo_id = @photoUrl;";
+		
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@photoUrl", photoUrl);
+		con->Open();
+		MySqlDataReader^ reader = cmd->ExecuteReader();
+
+		while (reader->Read()) {
+			String^ commentText = reader->GetString(0);
+
+			listView5->Items->Add(gcnew ListViewItem(gcnew array<String^>{ commentText }));
+		}
+
+		reader->Close();
+
+		con->Close();
+
+	}
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message);
+	}
+
+
 }
 };
 }

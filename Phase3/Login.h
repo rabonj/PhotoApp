@@ -59,7 +59,7 @@ namespace Phase3 {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -138,7 +138,7 @@ namespace Phase3 {
 			this->usernameLabel->Name = L"usernameLabel";
 			this->usernameLabel->Size = System::Drawing::Size(84, 20);
 			this->usernameLabel->TabIndex = 7;
-			this->usernameLabel->Text = L"username:";
+			this->usernameLabel->Text = L"Email:";
 			// 
 			// passwordLabel
 			// 
@@ -173,72 +173,72 @@ namespace Phase3 {
 #pragma endregion
 	private: System::Void textBox2_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
-private: System::Void password_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-}
-	   public:User^ user=nullptr;
-
-			 private: static int userId;
-
-private: System::Void loginButton_Click(System::Object^ sender, System::EventArgs^ e) {
-	String^ email = this->username->Text;
-	String^ password = this->password->Text;
-
-	if (email->Length == 0 || password->Length == 0) {
-		MessageBox::Show("Please enter email and password",
-			"Email or Password Empty", MessageBoxButtons::OK);
-		return;
+	private: System::Void password_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
+	public:User^ user = nullptr;
 
-	try {
+	private: static int userId;
+
+	private: System::Void loginButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		String^ email = this->username->Text;
+		String^ password = this->password->Text;
+
+		if (email->Length == 0 || password->Length == 0) {
+			MessageBox::Show("Please enter email and password",
+				"Email or Password Empty", MessageBoxButtons::OK);
+			return;
+		}
+
+		try {
 			String^ constr = "Server =127.0.0.1; Uid=root; Pwd=1234;Database=a2";
 			MySqlConnection^ con = gcnew MySqlConnection(constr);
 
-		String^ sqlQuery = "SELECT * FROM user WHERE email=@email AND password=@password;";
-		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@email", email);
-		cmd->Parameters->AddWithValue("@password", password);
-		con->Open();
+			String^ sqlQuery = "SELECT * FROM user WHERE email=@email AND password=@password;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@email", email);
+			cmd->Parameters->AddWithValue("@password", password);
+			con->Open();
 
-		MySqlDataReader^ reader = cmd->ExecuteReader();
-		if (reader->Read()) {
-			userId = Convert::ToInt32(reader["user_id"]);
+			MySqlDataReader^ reader = cmd->ExecuteReader();
+			if (reader->Read()) {
+				userId = Convert::ToInt32(reader["user_id"]);
 
-			// Create a new instance of the Register form
-			Profile^ profile = gcnew Profile();
+				// Create a new instance of the Register form
+				Profile^ profile = gcnew Profile();
 
-			// Show the Register form
-			profile->Show();
+				// Show the Register form
+				profile->Show();
 
-			// Hide the current form (MyForm)
-			this->Hide();
+				// Hide the current form (MyForm)
+				this->Hide();
+
+			}
+			else {
+				MessageBox::Show("Email or password is incorrect",
+					"Email or Password Error", MessageBoxButtons::OK);
+			}
+
+			con->Close();
 
 		}
-		else {
-			MessageBox::Show("Email or password is incorrect",
-				"Email or Password Error", MessageBoxButtons::OK);
+		catch (Exception^ ex) {
+
+			MessageBox::Show(ex->Message);
+
 		}
 
-		con->Close();
-
-	}
-	catch (Exception^ ex) {
-
-		MessageBox::Show(ex->Message);
-
 	}
 
-}
+	private: System::Void createButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		// Create a new instance of the Register form
+		Register^ registerForm = gcnew Register();
 
-	   private: System::Void createButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		   // Create a new instance of the Register form
-		   Register^ registerForm = gcnew Register();
+		// Show the Register form
+		registerForm->Show();
 
-		   // Show the Register form
-		   registerForm->Show();
+		// Hide the current form (MyForm)
+		this->Hide();
+	}
 
-		   // Hide the current form (MyForm)
-		   this->Hide();
-	   }
-
-};
+	};
 }

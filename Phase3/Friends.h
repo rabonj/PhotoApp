@@ -275,7 +275,7 @@ namespace Phase3 {
 		}
 #pragma endregion
 	private: System::Void searchFriend_Click(System::Object^ sender, System::EventArgs^ e) {
-			
+
 		String^ email = textBox1->Text;
 		String^ constr = "Server =127.0.0.1; Uid=root; Pwd=1234;Database=a2";
 		MySqlConnection^ con = gcnew MySqlConnection(constr);
@@ -295,237 +295,237 @@ namespace Phase3 {
 		   int currentUserId;
 
 
-private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-	// Get the selected user email from the listbox
-	String^ selectedUserEmail = listBox1->SelectedItem->ToString();
+	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+		// Get the selected user email from the listbox
+		String^ selectedUserEmail = listBox1->SelectedItem->ToString();
 
-	// Get the current user's email
-	String^ currentUserEmail = "a"; // replace with actual value
+		// Get the current user's email
+		String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
 
-	try {
-		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
-		MySqlConnection^ con = gcnew MySqlConnection(constr);
+		try {
+			String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
 
-		// Get the user_id of the selected user
-		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
-		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@email", selectedUserEmail);
-		con->Open();
-		int followedId = Convert::ToInt32(cmd->ExecuteScalar());
-		con->Close();
+			// Get the user_id of the selected user
+			String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@email", selectedUserEmail);
+			con->Open();
+			int followedId = Convert::ToInt32(cmd->ExecuteScalar());
+			con->Close();
 
-		// Get the user_id of the current user
-		sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
-		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@email", currentUserEmail);
-		con->Open();
-		int followerId = Convert::ToInt32(cmd->ExecuteScalar());
-		con->Close();
+			// Get the user_id of the current user
+			sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+			cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@email", currentUserEmail);
+			con->Open();
+			int followerId = Convert::ToInt32(cmd->ExecuteScalar());
+			con->Close();
 
-		// Check if the friend relationship already exists
-		sqlQuery = "SELECT COUNT(*) FROM friends WHERE currentUser=@currentUser AND addedUser=@addedUser;";
-		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@currentUser", followerId);
-		cmd->Parameters->AddWithValue("@addedUser", followedId);
-		con->Open();
-		int count = Convert::ToInt32(cmd->ExecuteScalar());
-		con->Close();
-
-
-		// Insert the friend record
-		if (count == 0) {
-		sqlQuery = "INSERT INTO friends (currentUser, addedUser) VALUES (@currentUser, @addedUser);";
-		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@currentUser", followerId);
-		cmd->Parameters->AddWithValue("@addedUser", followedId);
-		con->Open();
-		cmd->ExecuteNonQuery();
-		con->Close();
-		MessageBox::Show("Friend added successfully", "Success", MessageBoxButtons::OK);
-		}
-		else {
-			MessageBox::Show("Friend relationship already exists", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
-		}
-
-		// Retrieve all the friends of the current user
-		sqlQuery = "SELECT u.email FROM friends f INNER JOIN user u ON f.addedUser=u.user_id WHERE f.currentUser=@currentUser;";
-		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@currentUser", followerId);
-		con->Open();
-		MySqlDataReader^ reader = cmd->ExecuteReader();
-
-		
-
-		reader->Close();
-		con->Close();
-
-
-	}
-	catch (Exception^ ex) {
-		MessageBox::Show(ex->Message);
-	}
-}
-
-
-private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
-	try {
-		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
-		MySqlConnection^ con = gcnew MySqlConnection(constr);
-
-		// Get the user_id of the current user
-		String^ currentUserEmail = "a"; // replace with actual value
-		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
-		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@email", currentUserEmail);
-		con->Open();
-		int followerId = Convert::ToInt32(cmd->ExecuteScalar());
-		con->Close();
-
-		// Get the list of added users
-		sqlQuery = "SELECT user.email FROM friends INNER JOIN user ON friends.addedUser=user.user_id WHERE friends.currentUser=@followerId;";
-		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@followerId", followerId);
-		con->Open();
-		MySqlDataReader^ reader = cmd->ExecuteReader();
-		listView1->Items->Clear();
-		while (reader->Read()) {
-			String^ addedUserEmail = reader->GetString(0);
-			ListViewItem^ item = gcnew ListViewItem(addedUserEmail);
-			listView1->Items->Add(item);
-		}
-		reader->Close();
-		con->Close();
-	}
-	catch (Exception^ ex) {
-		MessageBox::Show(ex->Message);
-	}
-
-}
-private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
-
-	try {
-		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
-		MySqlConnection^ con = gcnew MySqlConnection(constr);
-
-		// Get the user_id of the current user
-		String^ currentUserEmail = "a"; // replace with actual value
-		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
-		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@email", currentUserEmail);
-		con->Open();
-		int currentUserID = Convert::ToInt32(cmd->ExecuteScalar());
-		con->Close();
-
-		// Get the list of followers
-		sqlQuery = "SELECT DISTINCT user.email FROM friends INNER JOIN user ON friends.currentUser=user.user_id WHERE friends.addedUser=@currentUserID;";
-		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@currentUserID", currentUserID);
-		con->Open();
-		MySqlDataReader^ reader = cmd->ExecuteReader();
-		while (reader->Read()) {
-			String^ followerEmail = reader->GetString(0);
-			ListViewItem^ item = gcnew ListViewItem(followerEmail);
-			listView2->Items->Add(item);
-		}
-		reader->Close();
-		con->Close();
-	}
-	catch (Exception^ ex) {
-		MessageBox::Show(ex->Message);
-	}
-}
-
-// this is the code for producing friend recommendations
-private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
-	try {
-		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
-		MySqlConnection^ con = gcnew MySqlConnection(constr);
-
-		// Get the user_id of the current user
-		String^ currentUserEmail = "a"; // replace with actual value
-		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
-		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@email", currentUserEmail);
-		con->Open();
-		int followerId = Convert::ToInt32(cmd->ExecuteScalar());
-		con->Close();
-
-		// Get the list of added users
-		sqlQuery = "SELECT user.email FROM user JOIN (SELECT User2.addedUser FROM (SELECT addedUser FROM Friends WHERE currentUser = @followerId) AS User1 INNER JOIN friends User2 ON User2.currentUser = User1.addedUser WHERE User2.addedUser NOT IN (SELECT addedUser FROM friends WHERE currentUser=@followerId) GROUP BY User2.addedUser ORDER BY COUNT(User2.addedUser) DESC) AS User3 WHERE User3.addedUser = user_id;";
-		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@followerId", followerId);
-		con->Open();
-		MySqlDataReader^ reader = cmd->ExecuteReader();
-		listBox2->Items->Clear();
-		while (reader->Read()) {
-			String^ addedUserEmail = reader->GetString(0);
-			listBox2->Items->Add(addedUserEmail);
-		}
-		reader->Close();
-		con->Close();
-	}
-	catch (Exception^ ex) {
-		MessageBox::Show(ex->Message);
-	}
-}
-
-// Add a recommended friend from the list
-private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e) {
-	// Get the selected user email from the listbox
-	String^ selectedUserEmail = listBox2->SelectedItem->ToString();
-
-	// Get the current user's email
-	String^ currentUserEmail = "a"; // replace with actual value
-
-	try {
-		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
-		MySqlConnection^ con = gcnew MySqlConnection(constr);
-
-		// Get the user_id of the selected user
-		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
-		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@email", selectedUserEmail);
-		con->Open();
-		int followedId = Convert::ToInt32(cmd->ExecuteScalar());
-		con->Close();
-
-		// Get the user_id of the current user
-		sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
-		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@email", currentUserEmail);
-		con->Open();
-		int followerId = Convert::ToInt32(cmd->ExecuteScalar());
-		con->Close();
-
-		// Check if the friend relationship already exists
-		sqlQuery = "SELECT COUNT(*) FROM friends WHERE currentUser=@currentUser AND addedUser=@addedUser;";
-		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@currentUser", followerId);
-		cmd->Parameters->AddWithValue("@addedUser", followedId);
-		con->Open();
-		int count = Convert::ToInt32(cmd->ExecuteScalar());
-		con->Close();
-
-
-		// Insert the friend record
-		if (count == 0) {
-			sqlQuery = "INSERT INTO friends (currentUser, addedUser) VALUES (@currentUser, @addedUser);";
+			// Check if the friend relationship already exists
+			sqlQuery = "SELECT COUNT(*) FROM friends WHERE currentUser=@currentUser AND addedUser=@addedUser;";
 			cmd = gcnew MySqlCommand(sqlQuery, con);
 			cmd->Parameters->AddWithValue("@currentUser", followerId);
 			cmd->Parameters->AddWithValue("@addedUser", followedId);
 			con->Open();
-			cmd->ExecuteNonQuery();
+			int count = Convert::ToInt32(cmd->ExecuteScalar());
 			con->Close();
-			MessageBox::Show("Friend added successfully", "Success", MessageBoxButtons::OK);
+
+
+			// Insert the friend record
+			if (count == 0) {
+				sqlQuery = "INSERT INTO friends (currentUser, addedUser) VALUES (@currentUser, @addedUser);";
+				cmd = gcnew MySqlCommand(sqlQuery, con);
+				cmd->Parameters->AddWithValue("@currentUser", followerId);
+				cmd->Parameters->AddWithValue("@addedUser", followedId);
+				con->Open();
+				cmd->ExecuteNonQuery();
+				con->Close();
+				MessageBox::Show("Friend added successfully", "Success", MessageBoxButtons::OK);
+			}
+			else {
+				MessageBox::Show("Friend relationship already exists", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+			}
+
+			// Retrieve all the friends of the current user
+			sqlQuery = "SELECT u.email FROM friends f INNER JOIN user u ON f.addedUser=u.user_id WHERE f.currentUser=@currentUser;";
+			cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@currentUser", followerId);
+			con->Open();
+			MySqlDataReader^ reader = cmd->ExecuteReader();
+
+
+
+			reader->Close();
+			con->Close();
+
+
 		}
-		else {
-			MessageBox::Show("Friend relationship already exists", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		catch (Exception^ ex) {
+			MessageBox::Show(ex->Message);
+		}
+	}
+
+
+	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+		try {
+			String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
+
+			// Get the user_id of the current user
+			String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
+			String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@email", currentUserEmail);
+			con->Open();
+			int followerId = Convert::ToInt32(cmd->ExecuteScalar());
+			con->Close();
+
+			// Get the list of added users
+			sqlQuery = "SELECT user.email FROM friends INNER JOIN user ON friends.addedUser=user.user_id WHERE friends.currentUser=@followerId;";
+			cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@followerId", followerId);
+			con->Open();
+			MySqlDataReader^ reader = cmd->ExecuteReader();
+			listView1->Items->Clear();
+			while (reader->Read()) {
+				String^ addedUserEmail = reader->GetString(0);
+				ListViewItem^ item = gcnew ListViewItem(addedUserEmail);
+				listView1->Items->Add(item);
+			}
+			reader->Close();
+			con->Close();
+		}
+		catch (Exception^ ex) {
+			MessageBox::Show(ex->Message);
 		}
 
 	}
-	catch (Exception^ ex) {
-		MessageBox::Show(ex->Message);
+	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+
+		try {
+			String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
+
+			// Get the user_id of the current user
+			String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
+			String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@email", currentUserEmail);
+			con->Open();
+			int currentUserID = Convert::ToInt32(cmd->ExecuteScalar());
+			con->Close();
+
+			// Get the list of followers
+			sqlQuery = "SELECT DISTINCT user.email FROM friends INNER JOIN user ON friends.currentUser=user.user_id WHERE friends.addedUser=@currentUserID;";
+			cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@currentUserID", currentUserID);
+			con->Open();
+			MySqlDataReader^ reader = cmd->ExecuteReader();
+			while (reader->Read()) {
+				String^ followerEmail = reader->GetString(0);
+				ListViewItem^ item = gcnew ListViewItem(followerEmail);
+				listView2->Items->Add(item);
+			}
+			reader->Close();
+			con->Close();
+		}
+		catch (Exception^ ex) {
+			MessageBox::Show(ex->Message);
+		}
 	}
-}
-};
+
+		   // this is the code for producing friend recommendations
+	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+		try {
+			String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
+
+			// Get the user_id of the current user
+			String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
+			String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@email", currentUserEmail);
+			con->Open();
+			int followerId = Convert::ToInt32(cmd->ExecuteScalar());
+			con->Close();
+
+			// Get the list of added users
+			sqlQuery = "SELECT user.email FROM user JOIN (SELECT User2.addedUser FROM (SELECT addedUser FROM Friends WHERE currentUser = @followerId) AS User1 INNER JOIN friends User2 ON User2.currentUser = User1.addedUser WHERE User2.addedUser NOT IN (SELECT addedUser FROM friends WHERE currentUser=@followerId) GROUP BY User2.addedUser ORDER BY COUNT(User2.addedUser) DESC) AS User3 WHERE User3.addedUser = user_id;";
+			cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@followerId", followerId);
+			con->Open();
+			MySqlDataReader^ reader = cmd->ExecuteReader();
+			listBox2->Items->Clear();
+			while (reader->Read()) {
+				String^ addedUserEmail = reader->GetString(0);
+				listBox2->Items->Add(addedUserEmail);
+			}
+			reader->Close();
+			con->Close();
+		}
+		catch (Exception^ ex) {
+			MessageBox::Show(ex->Message);
+		}
+	}
+
+		   // Add a recommended friend from the list
+	private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e) {
+		// Get the selected user email from the listbox
+		String^ selectedUserEmail = listBox2->SelectedItem->ToString();
+
+		// Get the current user's email
+		String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
+
+		try {
+			String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
+
+			// Get the user_id of the selected user
+			String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@email", selectedUserEmail);
+			con->Open();
+			int followedId = Convert::ToInt32(cmd->ExecuteScalar());
+			con->Close();
+
+			// Get the user_id of the current user
+			sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
+			cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@email", currentUserEmail);
+			con->Open();
+			int followerId = Convert::ToInt32(cmd->ExecuteScalar());
+			con->Close();
+
+			// Check if the friend relationship already exists
+			sqlQuery = "SELECT COUNT(*) FROM friends WHERE currentUser=@currentUser AND addedUser=@addedUser;";
+			cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@currentUser", followerId);
+			cmd->Parameters->AddWithValue("@addedUser", followedId);
+			con->Open();
+			int count = Convert::ToInt32(cmd->ExecuteScalar());
+			con->Close();
+
+
+			// Insert the friend record
+			if (count == 0) {
+				sqlQuery = "INSERT INTO friends (currentUser, addedUser) VALUES (@currentUser, @addedUser);";
+				cmd = gcnew MySqlCommand(sqlQuery, con);
+				cmd->Parameters->AddWithValue("@currentUser", followerId);
+				cmd->Parameters->AddWithValue("@addedUser", followedId);
+				con->Open();
+				cmd->ExecuteNonQuery();
+				con->Close();
+				MessageBox::Show("Friend added successfully", "Success", MessageBoxButtons::OK);
+			}
+			else {
+				MessageBox::Show("Friend relationship already exists", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+			}
+
+		}
+		catch (Exception^ ex) {
+			MessageBox::Show(ex->Message);
+		}
+	}
+	};
 }
