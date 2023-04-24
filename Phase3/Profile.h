@@ -162,5 +162,82 @@ namespace Phase3 {
 		this->Hide();
 	}
 
+	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+		listView1->Clear();
+		listView1->Columns->Clear();
+		listView1->Columns->Add("Email");
+		listView1->Columns->Add("Contribution Score");
+
+		try {
+			String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
+			con->Open();
+			String^ sqlQuery = "SELECT u.email, SUM(num_photos) + SUM(num_comments) AS contribution_score "
+				"FROM ( " +
+				"SELECT user_id, COUNT(*) AS num_photos, 0 AS num_comments " +
+				"FROM photo " +
+				"GROUP BY user_id " +
+				"UNION ALL "
+				"SELECT user_id, 0 AS num_photos, COUNT(*) AS num_comments " +
+				"FROM comment " +
+				"GROUP BY user_id " +
+				") AS t "
+				"INNER JOIN user u ON u.user_id = t.user_id " +
+				"GROUP BY t.user_id " +
+				"ORDER BY contribution_score DESC " +
+				"LIMIT 10;";
+
+
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			MySqlDataReader^ reader = cmd->ExecuteReader();
+
+			while (reader->Read()) {
+				String^ email = reader->GetString(0);
+				String^ contributionScore = reader->GetInt32(1).ToString();
+
+				ListViewItem^ item = gcnew ListViewItem(gcnew array<String^> { email, contributionScore });
+				listView1->Items->Add(item);
+			}
+
+			reader->Close();
+			con->Close();
+		}
+		catch (MySqlException^ ex) {
+			MessageBox::Show(ex->ToString());
+		}
+	}
+
+	private: System::Void tagRefresh_Click(System::Object^ sender, System::EventArgs^ e) {
+		listView1->Clear();
+		listView1->Columns->Clear();
+		listView1->Columns->Add("Email");
+		listView1->Columns->Add("Contribution Score");
+
+		try {
+			String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
+			con->Open();
+			String^ sqlQuery = "SELECT tags FROM photo ORDER BY RAND() LIMIT 10;";
+
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			MySqlDataReader^ reader = cmd->ExecuteReader();
+
+			while (reader->Read()) {
+				String^ tags = reader->GetString(0);
+
+				ListViewItem^ item = gcnew ListViewItem(gcnew array<String^> { tags });
+				listView1->Items->Add(item);
+			}
+
+			reader->Close();
+			con->Close();
+		}
+		catch (MySqlException^ ex) {
+			MessageBox::Show(ex->ToString());
+		}
+	}
+
+	private: System::Void listView1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+	}
 };
 }
