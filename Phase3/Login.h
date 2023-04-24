@@ -6,6 +6,7 @@
 #pragma once
 
 namespace Phase3 {
+	extern int globalUID = 0;
 
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -15,12 +16,12 @@ namespace Phase3 {
 	using namespace System::Drawing;
 	using namespace MySql::Data::MySqlClient;
 	/// <summary>
-	/// Summary for MyForm
+	/// Summary for Login
 	/// </summary>
-	public ref class MyForm : public System::Windows::Forms::Form
+	public ref class Login : public System::Windows::Forms::Form
 	{
 	public:
-		MyForm(void)
+		Login(void)
 		{
 			InitializeComponent();
 			//
@@ -32,7 +33,7 @@ namespace Phase3 {
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		~MyForm()
+		~Login()
 		{
 			if (components)
 			{
@@ -59,7 +60,7 @@ namespace Phase3 {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container^ components;
+		System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -87,7 +88,7 @@ namespace Phase3 {
 			this->loginButton->TabIndex = 0;
 			this->loginButton->Text = L"login";
 			this->loginButton->UseVisualStyleBackColor = true;
-			this->loginButton->Click += gcnew System::EventHandler(this, &MyForm::loginButton_Click);
+			this->loginButton->Click += gcnew System::EventHandler(this, &Login::loginButton_Click);
 			// 
 			// createButton
 			// 
@@ -99,7 +100,7 @@ namespace Phase3 {
 			this->createButton->TabIndex = 1;
 			this->createButton->Text = L"Create Account";
 			this->createButton->UseVisualStyleBackColor = true;
-			this->createButton->Click += gcnew System::EventHandler(this, &MyForm::createButton_Click);
+			this->createButton->Click += gcnew System::EventHandler(this, &Login::createButton_Click);
 
 			// 
 			// PhotoApp
@@ -119,7 +120,7 @@ namespace Phase3 {
 			this->password->Name = L"password";
 			this->password->Size = System::Drawing::Size(152, 20);
 			this->password->TabIndex = 5;
-			this->password->TextChanged += gcnew System::EventHandler(this, &MyForm::password_TextChanged);
+			this->password->TextChanged += gcnew System::EventHandler(this, &Login::password_TextChanged);
 			// 
 			// username
 			// 
@@ -127,7 +128,7 @@ namespace Phase3 {
 			this->username->Name = L"username";
 			this->username->Size = System::Drawing::Size(152, 20);
 			this->username->TabIndex = 6;
-			this->username->TextChanged += gcnew System::EventHandler(this, &MyForm::textBox2_TextChanged);
+			this->username->TextChanged += gcnew System::EventHandler(this, &Login::textBox2_TextChanged);
 			// 
 			// usernameLabel
 			// 
@@ -138,7 +139,7 @@ namespace Phase3 {
 			this->usernameLabel->Name = L"usernameLabel";
 			this->usernameLabel->Size = System::Drawing::Size(84, 20);
 			this->usernameLabel->TabIndex = 7;
-			this->usernameLabel->Text = L"Email:";
+			this->usernameLabel->Text = L"username:";
 			// 
 			// passwordLabel
 			// 
@@ -151,7 +152,7 @@ namespace Phase3 {
 			this->passwordLabel->TabIndex = 8;
 			this->passwordLabel->Text = L"password:";
 			// 
-			// MyForm
+			// Login
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
@@ -164,8 +165,8 @@ namespace Phase3 {
 			this->Controls->Add(this->PhotoApp);
 			this->Controls->Add(this->createButton);
 			this->Controls->Add(this->loginButton);
-			this->Name = L"MyForm";
-			this->Text = L"MyForm";
+			this->Name = L"Login";
+			this->Text = L"Login";
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -173,72 +174,72 @@ namespace Phase3 {
 #pragma endregion
 	private: System::Void textBox2_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
-	private: System::Void password_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+private: System::Void password_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+	   public:User^ user=nullptr;
+
+			 private: static int userId;
+
+private: System::Void loginButton_Click(System::Object^ sender, System::EventArgs^ e) {
+	String^ email = this->username->Text;
+	String^ password = this->password->Text;
+
+	if (email->Length == 0 || password->Length == 0) {
+		MessageBox::Show("Please enter email and password",
+			"Email or Password Empty", MessageBoxButtons::OK);
+		return;
 	}
-	public:User^ user = nullptr;
 
-	private: static int userId;
-
-	private: System::Void loginButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		String^ email = this->username->Text;
-		String^ password = this->password->Text;
-
-		if (email->Length == 0 || password->Length == 0) {
-			MessageBox::Show("Please enter email and password",
-				"Email or Password Empty", MessageBoxButtons::OK);
-			return;
-		}
-
-		try {
+	try {
 			String^ constr = "Server =127.0.0.1; Uid=root; Pwd=1234;Database=a2";
 			MySqlConnection^ con = gcnew MySqlConnection(constr);
 
-			String^ sqlQuery = "SELECT * FROM user WHERE email=@email AND password=@password;";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@email", email);
-			cmd->Parameters->AddWithValue("@password", password);
-			con->Open();
+		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email AND password=@password;";
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@email", email);
+		cmd->Parameters->AddWithValue("@password", password);
+		con->Open();
 
-			MySqlDataReader^ reader = cmd->ExecuteReader();
-			if (reader->Read()) {
-				userId = Convert::ToInt32(reader["user_id"]);
+		MySqlDataReader^ reader = cmd->ExecuteReader();
+		if (reader->Read()) {
+			globalUID = Convert::ToInt32(reader["user_id"]);
 
-				// Create a new instance of the Register form
-				Profile^ profile = gcnew Profile();
+			// Create a new instance of the Register form
+			Profile^ profile = gcnew Profile(globalUID);
 
-				// Show the Register form
-				profile->Show();
+			// Show the Register form
+			profile->Show();
 
-				// Hide the current form (MyForm)
-				this->Hide();
-
-			}
-			else {
-				MessageBox::Show("Email or password is incorrect",
-					"Email or Password Error", MessageBoxButtons::OK);
-			}
-
-			con->Close();
+			// Hide the current form (Login)
+			//this->Hide();
 
 		}
-		catch (Exception^ ex) {
-
-			MessageBox::Show(ex->Message);
-
+		else {
+			MessageBox::Show("Email or password is incorrect",
+				"Email or Password Error", MessageBoxButtons::OK);
 		}
+
+		con->Close();
+
+	}
+	catch (Exception^ ex) {
+
+		MessageBox::Show(ex->Message);
 
 	}
 
-	private: System::Void createButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		// Create a new instance of the Register form
-		Register^ registerForm = gcnew Register();
+}
 
-		// Show the Register form
-		registerForm->Show();
+	   private: System::Void createButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		   // Create a new instance of the Register form
+		   Register^ registerForm = gcnew Register();
 
-		// Hide the current form (MyForm)
-		this->Hide();
-	}
+		   // Show the Register form
+		   registerForm->Show();
 
-	};
+		   // Hide the current form (Login)
+		   //this->Hide();
+	   }
+
+};
 }

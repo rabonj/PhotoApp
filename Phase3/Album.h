@@ -16,12 +16,21 @@ namespace Phase3 {
 	public ref class Album : public System::Windows::Forms::Form
 	{
 	public:
-		Album(void)
+		int userId;
+		Album()
 		{
 			InitializeComponent();
 			//
 			//TODO: Add the constructor code here
 			//
+		}
+		Album(int userId)
+		{
+			InitializeComponent();
+			//
+			//TODO: Add the constructor code here
+			//
+			this->userId = userId;
 		}
 
 	protected:
@@ -41,8 +50,6 @@ namespace Phase3 {
 	private: System::Windows::Forms::ListView^ listView1;
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Button^ button2;
-	private: System::Windows::Forms::Button^ button3;
-	private: System::Windows::Forms::Button^ button4;
 	protected:
 
 	private:
@@ -64,8 +71,6 @@ namespace Phase3 {
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -122,32 +127,11 @@ namespace Phase3 {
 			this->button2->UseVisualStyleBackColor = true;
 			this->button2->Click += gcnew System::EventHandler(this, &Album::button2_Click_1);
 			// 
-			// button3
-			// 
-			this->button3->Location = System::Drawing::Point(338, 132);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(75, 23);
-			this->button3->TabIndex = 6;
-			this->button3->Text = L"Delete";
-			this->button3->UseVisualStyleBackColor = true;
-			this->button3->Click += gcnew System::EventHandler(this, &Album::button3_Click);
-			// 
-			// button4
-			// 
-			this->button4->Location = System::Drawing::Point(391, 310);
-			this->button4->Name = L"button4";
-			this->button4->Size = System::Drawing::Size(75, 23);
-			this->button4->TabIndex = 7;
-			this->button4->Text = L"button4";
-			this->button4->UseVisualStyleBackColor = true;
-			// 
 			// Album
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(478, 345);
-			this->Controls->Add(this->button4);
-			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->listView1);
@@ -167,19 +151,19 @@ namespace Phase3 {
 			MySqlConnection^ con = gcnew MySqlConnection(constr);
 
 			// Get the user_id of the current user
-			String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
-			String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@email", currentUserEmail);
-			con->Open();
-			int userId = Convert::ToInt32(cmd->ExecuteScalar());
-			con->Close();
+			//String^ currentUserEmail = "a"; // replace with actual value
+			//String^ sqlQuery = "SELECT email FROM user WHERE user_id=@user_id;";
+			//MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			//cmd->Parameters->AddWithValue("@user_id", this->userId);
+			//con->Open();
+			int userId = userId;
+			//con->Close();
 
 			// Check if album with same name already exists for current user
 			String^ albumName = textBox1->Text;
-			sqlQuery = "SELECT COUNT(*) FROM album WHERE user_id=@userId AND name=@name;";
-			cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@userId", userId);
+			String^ sqlQuery = "SELECT COUNT(*) FROM album WHERE user_id=@userId AND name=@name;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@userId", this->userId);
 			cmd->Parameters->AddWithValue("@name", albumName);
 			con->Open();
 			int count = Convert::ToInt32(cmd->ExecuteScalar());
@@ -189,7 +173,7 @@ namespace Phase3 {
 			if (count == 0) {
 				sqlQuery = "INSERT INTO album (user_id, name) VALUES (@userId, @name);";
 				cmd = gcnew MySqlCommand(sqlQuery, con);
-				cmd->Parameters->AddWithValue("@userId", userId);
+				cmd->Parameters->AddWithValue("@userId", this->userId);
 				cmd->Parameters->AddWithValue("@name", albumName);
 				con->Open();
 				cmd->ExecuteNonQuery();
@@ -211,18 +195,20 @@ private: System::Void button2_Click_1(System::Object^ sender, System::EventArgs^
 		MySqlConnection^ con = gcnew MySqlConnection(constr);
 
 		// Get the user_id of the current user
-		String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
-		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
-		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@email", currentUserEmail);
-		con->Open();
-		int userId = Convert::ToInt32(cmd->ExecuteScalar());
-		con->Close();
+		//String^ currentUserEmail = "a"; // replace with actual value
+		String^ sqlQuery;
+			//= "SELECT email FROM user WHERE user_id=@user_id;";
+		MySqlCommand^ cmd;
+			//= gcnew MySqlCommand(sqlQuery, con);
+		//cmd->Parameters->AddWithValue("@user_id", this->userId);
+		//con->Open();
+		int userId = userId;
+		//con->Close();
 
 		// Get the list of albums
 		sqlQuery = "SELECT name FROM album WHERE user_id=@userId;";
 		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@userId", userId);
+		cmd->Parameters->AddWithValue("@userId", this->userId);
 		con->Open();
 		MySqlDataReader^ reader = cmd->ExecuteReader();
 		while (reader->Read()) {
@@ -238,77 +224,5 @@ private: System::Void button2_Click_1(System::Object^ sender, System::EventArgs^
 	}
 
 }
-private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
-
-	try {
-		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
-		MySqlConnection^ con = gcnew MySqlConnection(constr);
-
-		// Get the ID of the selected album from the ListView
-		int albumId = -1;
-		if (listView1->SelectedItems->Count > 0) {
-			String^ name = listView1->SelectedItems[0]->SubItems[0]->Text;
-			String^ sqlQuery = "SELECT album_id FROM album WHERE name=@name;";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@name", name);
-			con->Open();
-			Object^ result = cmd->ExecuteScalar();
-			if (result != nullptr) {
-				albumId = Convert::ToInt32(result);
-			}
-			con->Close();
-		}
-
-		
-
-		// Delete the likes associated with the selected album
-		if (albumId != -1) {
-			String^ sqlQuery = "DELETE FROM likes WHERE photo_id IN (SELECT photo_id FROM photo WHERE album_id=@albumId);";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@albumId", albumId);
-			con->Open();
-			cmd->ExecuteNonQuery();
-			con->Close();
-		}
-
-		// Delete the comments associated with the selected album
-		if (albumId != -1) {
-			String^ sqlQuery = "DELETE FROM comment WHERE photo_id IN (SELECT photo_id FROM photo WHERE album_id=@albumId);";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@albumId", albumId);
-			con->Open();
-			cmd->ExecuteNonQuery();
-			con->Close();
-		}
-		// Delete the photos associated with the selected album
-		if (albumId != -1) {
-			String^ sqlQuery = "DELETE FROM photo WHERE album_id=@albumId;";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@albumId", albumId);
-			con->Open();
-			cmd->ExecuteNonQuery();
-			con->Close();
-		}
-		// Delete the selected album from the database
-		if (albumId != -1) {
-			String^ sqlQuery = "DELETE FROM album WHERE album_id=@albumId;";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@albumId", albumId);
-			con->Open();
-			cmd->ExecuteNonQuery();
-			con->Close();
-		}
-
-		// Remove the selected album from the ListView
-		if (listView1->SelectedItems->Count > 0) {
-			listView1->SelectedItems[0]->Remove();
-		}
-	}
-	catch (Exception^ ex) {
-		MessageBox::Show(ex->Message);
-	}
-}
-
-
 };
 }
