@@ -51,7 +51,7 @@ namespace Phase3 {
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::TextBox^ textBox6;
 	private: System::Windows::Forms::Label^ label6;
-	private: System::Windows::Forms::Button^ button2;
+
 	private: System::Windows::Forms::Label^ label7;
 	private: System::Windows::Forms::ComboBox^ comboBox1;
 
@@ -84,7 +84,6 @@ namespace Phase3 {
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
 			this->label6 = (gcnew System::Windows::Forms::Label());
-			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->SuspendLayout();
@@ -195,15 +194,6 @@ namespace Phase3 {
 			this->label6->TabIndex = 12;
 			this->label6->Text = L"Home Town (ZIP CODE)";
 			// 
-			// button2
-			// 
-			this->button2->Location = System::Drawing::Point(656, 288);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(75, 24);
-			this->button2->TabIndex = 13;
-			this->button2->Text = L"Login";
-			this->button2->UseVisualStyleBackColor = true;
-			// 
 			// label7
 			// 
 			this->label7->AutoSize = true;
@@ -229,7 +219,6 @@ namespace Phase3 {
 			this->ClientSize = System::Drawing::Size(826, 341);
 			this->Controls->Add(this->comboBox1);
 			this->Controls->Add(this->label7);
-			this->Controls->Add(this->button2);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->textBox6);
 			this->Controls->Add(this->label5);

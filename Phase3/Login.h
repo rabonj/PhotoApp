@@ -236,8 +236,7 @@ namespace Phase3 {
 		// Show the Register form
 		registerForm->Show();
 
-		// Hide the current form (MyForm)
-		this->Hide();
+
 	}
 
 	};

@@ -69,6 +69,10 @@ namespace Phase3 {
 
 	private: System::Windows::Forms::ListView^ listView5;
 	private: System::Windows::Forms::Button^ button10;
+	private: System::Windows::Forms::ListView^ listView6;
+	private: System::Windows::Forms::Button^ button11;
+	private: System::Windows::Forms::Button^ button12;
+	private: System::Windows::Forms::TextBox^ textBox5;
 
 
 
@@ -118,6 +122,10 @@ namespace Phase3 {
 			this->button9 = (gcnew System::Windows::Forms::Button());
 			this->listView5 = (gcnew System::Windows::Forms::ListView());
 			this->button10 = (gcnew System::Windows::Forms::Button());
+			this->listView6 = (gcnew System::Windows::Forms::ListView());
+			this->button11 = (gcnew System::Windows::Forms::Button());
+			this->button12 = (gcnew System::Windows::Forms::Button());
+			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -346,15 +354,15 @@ namespace Phase3 {
 			// listView5
 			// 
 			this->listView5->HideSelection = false;
-			this->listView5->Location = System::Drawing::Point(814, 79);
+			this->listView5->Location = System::Drawing::Point(814, 70);
 			this->listView5->Name = L"listView5";
-			this->listView5->Size = System::Drawing::Size(42, 34);
+			this->listView5->Size = System::Drawing::Size(195, 69);
 			this->listView5->TabIndex = 26;
 			this->listView5->UseCompatibleStateImageBehavior = false;
 			// 
 			// button10
 			// 
-			this->button10->Location = System::Drawing::Point(814, 136);
+			this->button10->Location = System::Drawing::Point(814, 156);
 			this->button10->Name = L"button10";
 			this->button10->Size = System::Drawing::Size(123, 22);
 			this->button10->TabIndex = 27;
@@ -362,11 +370,51 @@ namespace Phase3 {
 			this->button10->UseVisualStyleBackColor = true;
 			this->button10->Click += gcnew System::EventHandler(this, &Photo::button10_Click);
 			// 
+			// listView6
+			// 
+			this->listView6->HideSelection = false;
+			this->listView6->Location = System::Drawing::Point(338, 79);
+			this->listView6->Name = L"listView6";
+			this->listView6->Size = System::Drawing::Size(106, 60);
+			this->listView6->TabIndex = 28;
+			this->listView6->UseCompatibleStateImageBehavior = false;
+			// 
+			// button11
+			// 
+			this->button11->Location = System::Drawing::Point(338, 145);
+			this->button11->Name = L"button11";
+			this->button11->Size = System::Drawing::Size(106, 23);
+			this->button11->TabIndex = 29;
+			this->button11->Text = L"Check Caption ";
+			this->button11->UseVisualStyleBackColor = true;
+			this->button11->Click += gcnew System::EventHandler(this, &Photo::button11_Click);
+			// 
+			// button12
+			// 
+			this->button12->Location = System::Drawing::Point(686, 508);
+			this->button12->Name = L"button12";
+			this->button12->Size = System::Drawing::Size(75, 23);
+			this->button12->TabIndex = 30;
+			this->button12->Text = L"Search";
+			this->button12->UseVisualStyleBackColor = true;
+			this->button12->Click += gcnew System::EventHandler(this, &Photo::button12_Click);
+			// 
+			// textBox5
+			// 
+			this->textBox5->Location = System::Drawing::Point(473, 510);
+			this->textBox5->Name = L"textBox5";
+			this->textBox5->Size = System::Drawing::Size(188, 20);
+			this->textBox5->TabIndex = 31;
+			// 
 			// Photo
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1453, 592);
+			this->Controls->Add(this->textBox5);
+			this->Controls->Add(this->button12);
+			this->Controls->Add(this->button11);
+			this->Controls->Add(this->listView6);
 			this->Controls->Add(this->button10);
 			this->Controls->Add(this->listView5);
 			this->Controls->Add(this->button9);
@@ -916,6 +964,72 @@ private: System::Void button10_Click(System::Object^ sender, System::EventArgs^ 
 		String^ photoUrl = listView3->SelectedItems[0]->SubItems[1]->Text;
 
 		if (listView3->SelectedItems->Count > 0) {
+			String^ sqlQuery = "SELECT photo_id FROM photo WHERE url=@photoUrl;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@photoUrl", photoUrl);
+			con->Open();
+			Object^ result = cmd->ExecuteScalar();
+			if (result != nullptr) {
+				photoId = Convert::ToInt32(result);
+			}
+			con->Close();
+		}
+
+		// Get the total likes for the selected photo
+		String^ sqlQuery = "SELECT COUNT(*) FROM likes WHERE photo_id = @photoUrl;";
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@photoUrl", photoUrl);
+		con->Open();
+		Object^ result = cmd->ExecuteScalar();
+		int totalLikes = Convert::ToInt32(result);
+		con->Close();
+
+		// Add columns to the ListView
+		listView5->Columns->Add("First Name");
+		listView5->Columns->Add("Last Name");
+
+		// Get the likes and user details for the selected photo
+		sqlQuery = "SELECT user.firstname, user.lastname "
+			"FROM likes "
+			"INNER JOIN user ON likes.user_id = user.user_id "
+			"WHERE likes.photo_id = @photoUrl;";
+		cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@photoUrl", photoUrl);
+		con->Open();
+		MySqlDataReader^ reader = cmd->ExecuteReader();
+
+		// Add the likes details to the ListView
+		while (reader->Read()) {
+			String^ firstName = reader->GetString(0);
+			String^ lastName = reader->GetString(1);
+
+			listView5->Items->Add(gcnew ListViewItem(gcnew array<String^>{ firstName + " " + lastName }));
+		}
+
+		reader->Close();
+		con->Close();
+
+		// Display the total likes
+		MessageBox::Show("Total Likes: " + totalLikes);
+	}
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message);
+	}
+}
+
+private: System::Void button11_Click(System::Object^ sender, System::EventArgs^ e) {
+	listView6->Clear();
+
+	try {
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		MySqlConnection^ con = gcnew MySqlConnection(constr);
+
+		// Get the photo_id of the selected photo
+		int photoId = -1;
+		String^ photoUrl = listView3->SelectedItems[0]->SubItems[1]->Text;
+
+		if (listView3->SelectedItems->Count > 0) {
 			String^ photoUrl = listView3->SelectedItems[0]->SubItems[1]->Text;
 			String^ sqlQuery = "SELECT photo_id FROM photo WHERE url=@photoUrl;";
 			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
@@ -927,17 +1041,17 @@ private: System::Void button10_Click(System::Object^ sender, System::EventArgs^ 
 			}
 			con->Close();
 		}
-		String^ sqlQuery = "SELECT COUNT(*) FROM likes WHERE photo_id = @photoUrl;";
-		
+
+		String^ sqlQuery = "SELECT caption FROM photo WHERE photo_id=@photoUrl;";
 		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
 		cmd->Parameters->AddWithValue("@photoUrl", photoUrl);
 		con->Open();
 		MySqlDataReader^ reader = cmd->ExecuteReader();
 
 		while (reader->Read()) {
-			String^ commentText = reader->GetString(0);
+			String^ caption = reader->GetString(0);
 
-			listView5->Items->Add(gcnew ListViewItem(gcnew array<String^>{ commentText }));
+			listView6->Items->Add(gcnew ListViewItem(gcnew array<String^>{ caption }));
 		}
 
 		reader->Close();
@@ -949,8 +1063,42 @@ private: System::Void button10_Click(System::Object^ sender, System::EventArgs^ 
 	catch (Exception^ ex) {
 		MessageBox::Show(ex->Message);
 	}
-
-
 }
+
+private: System::Void button12_Click(System::Object^ sender, System::EventArgs^ e) {
+	listView4->Clear();
+
+	try {
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		MySqlConnection^ con = gcnew MySqlConnection(constr);
+
+		// Get the comment to search for
+		String^ searchText = textBox5->Text;
+
+		String^ sqlQuery = "SELECT * FROM comment WHERE text = @searchText;";
+		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+		cmd->Parameters->AddWithValue("@searchText", searchText);
+		con->Open();
+		MySqlDataReader^ reader = cmd->ExecuteReader();
+
+		while (reader->Read()) {
+			String^ commentText = reader->GetString(1);
+			String^ userName = reader->GetString(2);
+			String^ photoUrl = reader->GetString(3);
+
+			listView4->Items->Add(gcnew ListViewItem(gcnew array<String^>{ commentText, userName, photoUrl }));
+		}
+
+		reader->Close();
+
+		con->Close();
+
+	}
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message);
+	}
+}
+
 };
 }
