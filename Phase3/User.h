@@ -11,5 +11,7 @@ public:
 	String^ password;
 	DateTime^ dob;
 	int hometown;
+	String^ gender;
+
 
 };

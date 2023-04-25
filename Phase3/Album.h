@@ -16,12 +16,21 @@ namespace Phase3 {
 	public ref class Album : public System::Windows::Forms::Form
 	{
 	public:
-		Album(void)
+		int userId;
+		Album()
 		{
 			InitializeComponent();
 			//
 			//TODO: Add the constructor code here
 			//
+		}
+		Album(int userId)
+		{
+			InitializeComponent();
+			//
+			//TODO: Add the constructor code here
+			//
+			this->userId = userId;
 		}
 
 	protected:
@@ -42,14 +51,13 @@ namespace Phase3 {
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Button^ button3;
-
 	protected:
 
 	private:
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -123,7 +131,7 @@ namespace Phase3 {
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(338, 132);
+			this->button3->Location = System::Drawing::Point(227, 164);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 6;
@@ -156,19 +164,19 @@ namespace Phase3 {
 			MySqlConnection^ con = gcnew MySqlConnection(constr);
 
 			// Get the user_id of the current user
-			String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
-			String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@email", currentUserEmail);
-			con->Open();
-			int userId = Convert::ToInt32(cmd->ExecuteScalar());
-			con->Close();
+			//String^ currentUserEmail = "a"; // replace with actual value
+			//String^ sqlQuery = "SELECT email FROM user WHERE user_id=@user_id;";
+			//MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			//cmd->Parameters->AddWithValue("@user_id", this->userId);
+			//con->Open();
+			int userId = userId;
+			//con->Close();
 
 			// Check if album with same name already exists for current user
 			String^ albumName = textBox1->Text;
-			sqlQuery = "SELECT COUNT(*) FROM album WHERE user_id=@userId AND name=@name;";
-			cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@userId", userId);
+			String^ sqlQuery = "SELECT COUNT(*) FROM album WHERE user_id=@userId AND name=@name;";
+			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@userId", this->userId);
 			cmd->Parameters->AddWithValue("@name", albumName);
 			con->Open();
 			int count = Convert::ToInt32(cmd->ExecuteScalar());
@@ -178,7 +186,7 @@ namespace Phase3 {
 			if (count == 0) {
 				sqlQuery = "INSERT INTO album (user_id, name) VALUES (@userId, @name);";
 				cmd = gcnew MySqlCommand(sqlQuery, con);
-				cmd->Parameters->AddWithValue("@userId", userId);
+				cmd->Parameters->AddWithValue("@userId", this->userId);
 				cmd->Parameters->AddWithValue("@name", albumName);
 				con->Open();
 				cmd->ExecuteNonQuery();
@@ -194,110 +202,110 @@ namespace Phase3 {
 		}
 	}
 
-private: System::Void button2_Click_1(System::Object^ sender, System::EventArgs^ e) {
-	try {
-		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
-		MySqlConnection^ con = gcnew MySqlConnection(constr);
+	private: System::Void button2_Click_1(System::Object^ sender, System::EventArgs^ e) {
+		listView1->Clear();
+		try {
+			String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
 
-		// Get the user_id of the current user
-		String^ currentUserEmail = "dblany8@yelp.com"; // replace with actual value
-		String^ sqlQuery = "SELECT user_id FROM user WHERE email=@email;";
-		MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@email", currentUserEmail);
-		con->Open();
-		int userId = Convert::ToInt32(cmd->ExecuteScalar());
-		con->Close();
+			// Get the user_id of the current user
+			//String^ currentUserEmail = "a"; // replace with actual value
+			String^ sqlQuery;
+			//= "SELECT email FROM user WHERE user_id=@user_id;";
+			MySqlCommand^ cmd;
+			//= gcnew MySqlCommand(sqlQuery, con);
+		//cmd->Parameters->AddWithValue("@user_id", this->userId);
+		//con->Open();
+			int userId = userId;
+			//con->Close();
 
-		// Get the list of albums
-		sqlQuery = "SELECT name FROM album WHERE user_id=@userId;";
-		cmd = gcnew MySqlCommand(sqlQuery, con);
-		cmd->Parameters->AddWithValue("@userId", userId);
-		con->Open();
-		MySqlDataReader^ reader = cmd->ExecuteReader();
-		while (reader->Read()) {
-			String^ albumName = reader->GetString(0);
-			ListViewItem^ item = gcnew ListViewItem(albumName);
-			listView1->Items->Add(item);
-		}
-		reader->Close();
-		con->Close();
-	}
-	catch (Exception^ ex) {
-		MessageBox::Show(ex->Message);
-	}
-
-}
-private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
-
-	try {
-		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
-		MySqlConnection^ con = gcnew MySqlConnection(constr);
-
-		// Get the ID of the selected album from the ListView
-		int albumId = -1;
-		if (listView1->SelectedItems->Count > 0) {
-			String^ name = listView1->SelectedItems[0]->SubItems[0]->Text;
-			String^ sqlQuery = "SELECT album_id FROM album WHERE name=@name;";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@name", name);
+			// Get the list of albums
+			sqlQuery = "SELECT name FROM album WHERE user_id=@userId;";
+			cmd = gcnew MySqlCommand(sqlQuery, con);
+			cmd->Parameters->AddWithValue("@userId", this->userId);
 			con->Open();
-			Object^ result = cmd->ExecuteScalar();
-			if (result != nullptr) {
-				albumId = Convert::ToInt32(result);
+			MySqlDataReader^ reader = cmd->ExecuteReader();
+			while (reader->Read()) {
+				String^ albumName = reader->GetString(0);
+				ListViewItem^ item = gcnew ListViewItem(albumName);
+				listView1->Items->Add(item);
 			}
+			reader->Close();
 			con->Close();
 		}
+		catch (Exception^ ex) {
+			MessageBox::Show(ex->Message);
+		}
 
+	}
+	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+
+		if (listView1->SelectedItems->Count == 0) {
+			MessageBox::Show("Please select an album to delete.");
+			return;
+		}
+
+		String^ selectedAlbumName = listView1->SelectedItems[0]->SubItems[0]->Text;
+
+		String^ constr = "Server=127.0.0.1;Uid=root;Pwd=1234;Database=a2";
+		try {
+			MySqlConnection^ con = gcnew MySqlConnection(constr);
+			con->Open();
+
+			// Get the album ID of the selected album
+			int albumId = -1;
+			if (listView1->SelectedItems->Count > 0) {
+				String^ name = listView1->SelectedItems[0]->SubItems[0]->Text;
+				String^ sqlQuery = "SELECT album_id FROM album WHERE name=@name;";
+				MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+				cmd->Parameters->AddWithValue("@name", name);
+				Object^ result = cmd->ExecuteScalar();
+				if (result != nullptr) {
+					albumId = Convert::ToInt32(result);
+				}
+			}
+
+			// Delete the likes associated with the selected album
+			if (albumId != -1) {
+				String^ sqlQuery = "DELETE FROM likes WHERE photo_id IN (SELECT photo_id FROM photo WHERE album_id=@albumId);";
+				MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+				cmd->Parameters->AddWithValue("@albumId", albumId);
+				cmd->ExecuteNonQuery();
+			}
+
+			// Delete the comments associated with the selected album
+			if (albumId != -1) {
+				String^ sqlQuery = "DELETE FROM comment WHERE photo_id IN (SELECT photo_id FROM photo WHERE album_id=@albumId);";
+				MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+				cmd->Parameters->AddWithValue("@albumId", albumId);
+				cmd->ExecuteNonQuery();
+			}
+
+			// Delete the photos associated with the selected album
+			if (albumId != -1) {
+				String^ sqlQuery = "DELETE FROM photo WHERE album_id=@albumId;";
+				MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+				cmd->Parameters->AddWithValue("@albumId", albumId);
+				cmd->ExecuteNonQuery();
+			}
+
+			// Delete the selected album from the database
+			if (albumId != -1) {
+				String^ sqlQuery = "DELETE FROM album WHERE album_id=@albumId;";
+				MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
+				cmd->Parameters->AddWithValue("@albumId", albumId);
+				cmd->ExecuteNonQuery();
+			}
+			// Remove the selected album from the ListView
+			if (listView1->SelectedItems->Count > 0) {
+				listView1->SelectedItems[0]->Remove();
+			}
 		
-
-		// Delete the likes associated with the selected album
-		if (albumId != -1) {
-			String^ sqlQuery = "DELETE FROM likes WHERE photo_id IN (SELECT photo_id FROM photo WHERE album_id=@albumId);";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@albumId", albumId);
-			con->Open();
-			cmd->ExecuteNonQuery();
-			con->Close();
 		}
-
-		// Delete the comments associated with the selected album
-		if (albumId != -1) {
-			String^ sqlQuery = "DELETE FROM comment WHERE photo_id IN (SELECT photo_id FROM photo WHERE album_id=@albumId);";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@albumId", albumId);
-			con->Open();
-			cmd->ExecuteNonQuery();
-			con->Close();
+		catch (MySqlException^ ex) {
+			MessageBox::Show(ex->ToString());
 		}
-		// Delete the photos associated with the selected album
-		if (albumId != -1) {
-			String^ sqlQuery = "DELETE FROM photo WHERE album_id=@albumId;";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@albumId", albumId);
-			con->Open();
-			cmd->ExecuteNonQuery();
-			con->Close();
-		}
-		// Delete the selected album from the database
-		if (albumId != -1) {
-			String^ sqlQuery = "DELETE FROM album WHERE album_id=@albumId;";
-			MySqlCommand^ cmd = gcnew MySqlCommand(sqlQuery, con);
-			cmd->Parameters->AddWithValue("@albumId", albumId);
-			con->Open();
-			cmd->ExecuteNonQuery();
-			con->Close();
-		}
-
-		// Remove the selected album from the ListView
-		if (listView1->SelectedItems->Count > 0) {
-			listView1->SelectedItems[0]->Remove();
-		}
+	
 	}
-	catch (Exception^ ex) {
-		MessageBox::Show(ex->Message);
-	}
-}
-
-
 };
 }

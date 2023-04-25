@@ -1,5 +1,4 @@
 #include "Album.h"
-#include "Profile.h"
 
 using namespace System;
 

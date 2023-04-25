@@ -15,7 +15,7 @@ void main(array<String^>^ args)
 
     int globalUID;
 
-    Phase3::MyForm form;
+    Phase3::Login form;
 
     Application::Run(% form);
 
